@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html40/strict.dtd">
+<HTML LANG="de"><HEAD>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+	<META NAME="author" CONTENT="Arne Johannessen">
+	<LINK REV="made" HREF="mailto:webmaster&#64;intern.skgb.de">
+	<TITLE>SKGB-intern: Vorstandsbereich</TITLE>
+	<STYLE TYPE="text/css"><!--
+@import url("intern1.css");
+--></STYLE>
+	
+	<STYLE TYPE="text/css">
+@import url("jquery-jquery-ui-12bea93/themes/base/jquery.ui.all.css");
+/*
+.ui-widget {
+	font: 1em "Trebuchet MS", Arial, sans-serif;
+}
+TEXTAREA#initdata {
+	font: .6em "Monaco", "Courier", monospaced;
+	width: 100%;
+}
+TD.member {
+	background: silver;
+}
+TD.member>DIV {
+	background: white;
+}
+*/
+TABLE#stegdienst, #statistics {
+	display: table-cell;
+}
+	</STYLE>
+	
+	<SCRIPT SRC="jquery-jquery-ui-12bea93/jquery-1.4.4.js"></SCRIPT>
+	<SCRIPT SRC="jquery-ui-1.8.7.custom/js/jquery-ui-1.8.7.custom.min.js"></SCRIPT>
+	<SCRIPT SRC="stegdienst.js"></SCRIPT>
+	
+	<LINK REL="icon" HREF="/icon.png" TYPE="image/png">
+</HEAD><BODY>
+	<DIV CLASS="hide">Zum <A HREF="#menu" ACCESSKEY="2">Menü</A> springen.</DIV>
+	<DIV ID="head"><H1>SKGB<EM>-intern</EM> <STRONG>Vorstandsbereich</STRONG></H1></DIV>
+
+
+<DIV ID="menu"><UL>
+	<LI><A HREF="/digest/vorstand/">zurück zum Menü</A></LI>
+</UL><HR></DIV>
+
+<P>Unfinished Development Work
+
+<DIV ID="tabs">
+<UL>
+	<LI><A HREF="#tabs-1">Parameter für Vorschlag</A></LI>
+	<LI><A HREF="#tabs-2">Stegdienstliste</A></LI>
+	<LI><A HREF="#tabs-3">Export/Druck</A></LI>
+</UL>
+<DIV ID="tabs-1">
+
+<H2>Parameter für Vorschlag</H2>
+<TEXTAREA COLS="120" ROWS="10" ID="initdata">
+{
+members: [
+{id: 1, name: 'Adam Alfa', since: undefined, recent: false, postcode: '51709', remote: false, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
+{id: 2, name: 'Britta Bravo', since: 1985, recent: false, postcode: '51588', remote: true, history: {'2010': {expected: 0, actual: 0}, '2009': {expected: 1, actual: 0}}},
+{id: 3, name: 'Christa Charlie', since: 1994, recent: false, postcode: '51674', remote: true, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
+{id: 4, name: 'Dieter Delta', since: 1994, recent: false, postcode: '76185', remote: true, history: {'2010': {expected: 1, actual: 1}, '2009': {expected: 1, actual: 1}}},
+{id: 5, name: 'Emil Echo', since: 1998, recent: false, postcode: '51709', remote: false, history: {'2010': {expected: 3, actual: 2}, '2009': {expected: 3, actual: 3}}},
+{id: 6, name: 'Frida Foxtrot', since: 1997, recent: false, postcode: '51789', remote: true, history: {'2010': {expected: 2, actual: 2}, '2009': {expected: 2, actual: 2}}},
+{id: 7, name: 'Gerhart Golf', since: 1984, recent: false, postcode: '51674', remote: true, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 2, actual: 2}}},
+{id: 8, name: 'Helmut Hotel', since: 1967, recent: false, postcode: '51645', remote: false, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
+{id: 9, name: 'Ingmar India', since: 1971, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 2, actual: 1}, '2009': {expected: 2, actual: 2}}},
+{id: 10, name: 'Julie Juliett', since: 1993, recent: false, postcode: '51503', remote: true, history: {'2010': {expected: 2, actual: 2}, '2009': {expected: 3, actual: 3}}},
+{id: 11, name: 'Karoline Kilo', since: 1995, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 1, actual: 1}, '2009': {expected: 2, actual: 2}}},
+{id: 12, name: 'Ludwig Lima', since: 1999, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 3, actual: 0}, '2009': {expected: 3, actual: 3}}},
+{id: 13, name: 'Martina Mike', since: 2004, recent: false, postcode: '53809', remote: true, history: {'2010': {expected: 2, actual: 0}, '2009': {expected: 2, actual: 2}}},
+{id: 14, name: 'Nora November', since: 2009, recent: true, postcode: '51647', remote: false},
+{id: 15, name: 'Oskar Oscar', since: 2010, recent: true, postcode: '51709', remote: false},
+{id: 16, name: 'Pippa Papa', since: 2010, recent: true, postcode: '51491', remote: true},
+]
+}
+</TEXTAREA>
+<INPUT TYPE="button" VALUE="Vorschlag erzeugen" ID="generate-suggestion-button">
+
+</DIV>
+<DIV ID="tabs-2">
+
+<H2>Stegdienstliste</H2>
+<TABLE ID="stegdienst">
+<TR><TH ID="date-col">Datum ab <TH COLSPAN="2" ID="members-col">Eingeteilte Mitglieder <!--<TH ID="warning-col">Hinweise-->
+</TABLE>
+
+<DIV ID="statistics">
+	<UL></UL>
+</DIV>
+
+</DIV>
+<DIV ID="tabs-3">
+
+<H2>Export/Druck</H2>
+<P>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</P>
+
+</DIV>
+</DIV>
+
+
+
+
+	
+	<P ID="foot">Version 1.1.8g<BR>2011-01<BR><EM>aj3</EM></P>
+</BODY></HTML>
