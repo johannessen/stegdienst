@@ -296,9 +296,9 @@ SKGB.StegdienstListeInterface.prototype.updateWarnings = function () {
 			continue;
 		}
 		
-		if (dateItem[0].postcode == dateItem[1].postcode) {  // :DEBUG:
-			warningClass = 'note';
-			warningText = 'DIe PLZ ist gleich.';
+		if (dateItem[0].remote && dateItem[1].remote) {
+			warningClass = 'check';
+			warningText = 'Alle Mitglieder dieses Datums sind "fern".';
 		}
 		if (dateItem[0].id == dateItem[1].id) {
 			warningClass = 'error';
