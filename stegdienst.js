@@ -255,7 +255,10 @@ SKGB.StegdienstListeInterface.prototype.formatDate = function (date) {
 
 
 SKGB.StegdienstListeInterface.prototype.createDraggableHtmlMemberElement = function (memberObject, dragMode) {
-	memberObject.domNode.innerHTML = '<DIV CLASS="ui-state-default ui-corner-all">' + memberObject.member.name + '<INPUT TYPE="hidden" NAME="id" VALUE="' + memberObject.member.id + '"></DIV>';
+	
+	var nahFern = memberObject.member.remote ? 'F ' : 'N ';
+	
+	memberObject.domNode.innerHTML = '<DIV CLASS="ui-state-default ui-corner-all">' + nahFern + memberObject.member.name + '<INPUT TYPE="hidden" NAME="id" VALUE="' + memberObject.member.id + '"></DIV>';
 	var div = $(memberObject.domNode).find('DIV')[0];
 	
 	$(div).draggable({
