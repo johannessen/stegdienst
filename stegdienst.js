@@ -2,6 +2,9 @@
 if (! window.SKGB) { window.SKGB = {}; }
 
 
+// :BUG: wird ein gerade in der animation befindliches item verschoben, kommt es zu inkonsistenzen zwischen modell und ui
+
+
 window.config = {
 	markWeekDay: 3,  // Wednesday
 	summerStart: {month: 2, day: 15}, // March
