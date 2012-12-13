@@ -41,6 +41,43 @@ TD.member>DIV {
 	background: white;
 }
 */
+
+H2, .strategy-options {
+	margin-bottom: 1.5em;
+}
+.strategy-options {
+	margin-left: 2.5em;
+}
+.ui-tabs-panel A {
+	color: blue;
+}
+LABEL {
+	margin-right: 1.2em;
+}
+
+#statistics .count {
+	position: absolute;
+}
+#statistics .count + * {
+	margin-left: 2.5em;
+}
+#stegdienst TH {
+	font-size: 87%;
+	padding-bottom: 1em;
+}
+#stegdienst TD:first-child, #stegdienst TD:first-child + TD {
+	padding-right: .6em;
+}
+#tabs-2 .ui-draggable {  /* Listen-Tab */
+	padding: 0 .3em;
+	min-width: 12em;
+}
+#stegdienst TD.member {
+	min-width: 12em;
+}
+#stegdienst TD.warning {
+	height: 1.33em; /* keeps empty rows approximately the same height als those with assigned members in it */
+}
 #stegdienst .warning IMG {
 	vertical-align: -18%;
 }
@@ -48,15 +85,41 @@ TABLE#stegdienst, #statistics {
 	display: table-cell;
 }
 #statistics {
-	padding-left: 2em;
+	padding-left: 2.5em;
+}
+#statistics #members-list {
+	padding-bottom: 128px;
+	background-image: url(icons/trash.png);
+	background-repeat: no-repeat;
+	background-position: center bottom;
 }
 UL#members-list, UL#members-list>LI {
 	list-style-type: none;
 	display: block;
 	padding-left: 0;
+	margin-top: 2px;
 }
 .ui-draggable.animated {
 	z-index: 9 !important;
+}
+SPAN.fern, SPAN.nah, SPAN.vorstand {
+	font-size: 60%;
+	font-weight: bold;
+	vertical-align: 2px;
+}
+.activeMember {
+	color: black !important;
+	background-color: #bbb !important;
+	background-image: url(icons/ui-bg_glass_75_adadad_1x400.png) !important;
+}
+LABEL.not-implemented, .strategy-options .not-implemented {
+	color: grey;
+}
+.overwrite-warning {
+	display: none;
+}
+.overwrite-warning.active {
+	display: block;
 }
 </STYLE>
 	
@@ -77,45 +140,51 @@ UL#members-list, UL#members-list>LI {
 	<LI><A HREF="/digest/vorstand/">zurück zum Menü</A></LI>
 </UL><HR></DIV>
 
-<P>Unfinished Development Work – <STRONG>Technology Preview</STRONG>
-
 <DIV ID="tabs">
 <UL>
-	<LI><A HREF="#tabs-1">Parameter für Vorschlag</A></LI>
+	<LI><A HREF="#tabs-1">Vorschlag berechnen</A></LI>
 	<LI><A HREF="#tabs-2">Stegdienstliste</A></LI>
-	<LI><A HREF="#tabs-3">Export/Druck</A></LI>
+	<LI><A HREF="#tabs-3">Import</A></LI>
+	<LI><A HREF="#tabs-4">Export</A></LI>
 </UL>
 <DIV ID="tabs-1">
 
-<H2>Parameter für Vorschlag</H2>
-<TEXTAREA COLS="120" ROWS="10" ID="initdata">
-{
-members: [
-{id: 1, name: 'Adam Alfa', since: undefined, recent: false, postcode: '51709', remote: false, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
-{id: 2, name: 'Britta Bravo', since: 1985, recent: false, postcode: '51588', remote: true, history: {'2010': {expected: 0, actual: 0}, '2009': {expected: 1, actual: 0}}},
-{id: 3, name: 'Christa Charlie', since: 1994, recent: false, postcode: '51674', remote: true, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
-{id: 4, name: 'Dieter Delta', since: 1994, recent: false, postcode: '76185', remote: true, history: {'2010': {expected: 1, actual: 1}, '2009': {expected: 1, actual: 1}}},
-{id: 5, name: 'Emil Echo', since: 1998, recent: false, postcode: '51709', remote: false, history: {'2010': {expected: 3, actual: 2}, '2009': {expected: 3, actual: 3}}},
-{id: 6, name: 'Frida Foxtrot', since: 1997, recent: false, postcode: '51789', remote: true, history: {'2010': {expected: 2, actual: 2}, '2009': {expected: 2, actual: 2}}},
-{id: 7, name: 'Gerhart Golf', since: 1984, recent: false, postcode: '51674', remote: true, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 2, actual: 2}}},
-{id: 8, name: 'Helmut Hotel', since: 1967, recent: false, postcode: '51645', remote: false, history: {'2010': {expected: 3, actual: 3}, '2009': {expected: 3, actual: 3}}},
-{id: 9, name: 'Ingmar India', since: 1971, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 2, actual: 1}, '2009': {expected: 2, actual: 2}}},
-{id: 10, name: 'Julie Juliett', since: 1993, recent: false, postcode: '51503', remote: true, history: {'2010': {expected: 2, actual: 2}, '2009': {expected: 3, actual: 3}}},
-{id: 11, name: 'Karoline Kilo', since: 1995, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 1, actual: 1}, '2009': {expected: 2, actual: 2}}},
-{id: 12, name: 'Ludwig Lima', since: 1999, recent: false, postcode: '51643', remote: false, history: {'2010': {expected: 3, actual: 0}, '2009': {expected: 3, actual: 3}}},
-{id: 13, name: 'Martina Mike', since: 2004, recent: false, postcode: '53809', remote: true, history: {'2010': {expected: 2, actual: 0}, '2009': {expected: 2, actual: 2}}},
-{id: 14, name: 'Nora November', since: 2009, recent: true, postcode: '51647', remote: false},
-{id: 15, name: 'Oskar Oscar', since: 2010, recent: true, postcode: '51709', remote: false},
-{id: 16, name: 'Pippa Papa', since: 2010, recent: true, postcode: '51491', remote: true},
-]
-}
-</TEXTAREA>
-<INPUT TYPE="button" VALUE="Vorschlag erzeugen" ID="generate-suggestion-button">
+<H2 style="display:none">Vorschlags-Strategie</H2>
+<FORM ACTION="" NAME="strategy" ID="strategy">
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="blank"> <STRONG>leere Liste</STRONG></LABEL>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P><LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="id" CHECKED> nach interner Datenbank-ID</LABEL>
+	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname"> nach Vorname</LABEL>
+	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="sortkey" DISABLED> nach Nachname</LABEL>
+</DIV>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="random"> <STRONG>zufällig</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" DISABLED CHECKED> mit Zurücklegen</LABEL>
+	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" DISABLED> ohne Zurücklegen</LABEL>
+	<P><LABEL CLASS="not-implemented"><INPUT TYPE="checkbox" DISABLED> leicht vermeidbare Fehler berücksichtigen</LABEL>
+</DIV>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base" CHECKED> <STRONG>unverändert</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P><LABEL>als Vorlage zu verwendendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
+</DIV>
+
+<P><INPUT TYPE="button" VALUE="Vorschlag erzeugen" CLASS="generate-suggestion-button" DISABLED>
+<P CLASS="overwrite-warning"><EM>(der aktuelle Listenentwurf wird überschrieben!)</EM>
+
+<P style="margin-top:3em"><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="strategy" VALUE="montecarlo" DISABLED> <STRONG>optimiert</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P CLASS="not-implemented"><EM>noch nicht implementiert</EM>
+	<P>Monte-Carlo–Methoden erlauben es, auch dann einen Lösungsvorschlag zu liefern, wenn die Randbedingungen (nah/fern, genau zwei Stegdienste etc.) nicht alle erfüllt werden können. Während ein solcher Vorschlag nicht ohne interaktive Prüfung weiterverwendet werden sollte, wird er <EM>wahrscheinlich</EM> nur noch minimale Nachbearbeitung erfordern. Das funktioniert, indem für eine sehr große Anzahl zufälliger Vorschläge anhand einer Metrik die jeweilige Tauglichkeit als Stegdienstliste berechnet und aus dieser Menge dann derjenige Vorschlag ausgewählt wird, der die wenigsten Randbedingungen verletzt.
+	<P>Da die Metrik auf mehreren verschiedenen Einzelmerkmalen basiert, wird diese Strategie über eine entsprechende Anzahl von Einstellungen verfügen, mit deren Hilfe der Nutzer das Verhalten der Strategie detailliert kontrollieren kann.
+	<P>mehr Informationen: <A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Simulation">Wikipedia zur Monte-Carlo–Methodik</A>
+</DIV>
+</FORM>
 
 </DIV>
 <DIV ID="tabs-2">
 
-<H2>Stegdienstliste</H2>
+<H2 style="display:none">Stegdienstliste</H2>
 <TABLE ID="stegdienst">
 <THEAD>
 <TR><TH ID="warning-col"> <TH ID="date-col">Woche ab <TH COLSPAN="2" ID="member-cols">Eingeteilte Mitglieder
@@ -127,18 +196,101 @@ members: [
 	<UL ID="members-list"></UL>
 </DIV>
 
+<FORM ACTION="" NAME="liste-form" ID="liste-form">
+<P><INPUT TYPE="button" VALUE="Vorschlag erzeugen" CLASS="generate-suggestion-button" DISABLED>
+</FORM>
+
+<p id=out>
+
 </DIV>
 <DIV ID="tabs-3">
 
-<H2>Export/Druck</H2>
-<P>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</P>
+<H2 style="display:none">Import</H2>
+<FORM ACTION="" NAME="import-form" ID="import-form">
+<P>Hier kann eine vorbereitete Liste aus einem anderen Programm (Excel, Word, InDesign, RagTime, Texteditor, …) zur weiteren Bearbeitung mit dieser Anwendung eingelesen werden. Das geht am einfachsten per Copy+Paste.
+</P>
+<TEXTAREA COLS="120" ROWS="16" ID="importdata">
+</TEXTAREA>
+<P><INPUT TYPE="button" VALUE="Import-Daten einlesen" NAME="import" DISABLED>
+<P CLASS="overwrite-warning"><EM>(der aktuelle Listenentwurf wird überschrieben!)</EM>
+<P><SMALL><br>Technische Details zum Datenformat: Grundsätzlich muss es dasselbe Format sein, das vom Export erzeugt wird: Tab/Return-getrennt, „Vorname Nachname“. CSV-Quelltext à la <code>"Name","Name"</code> oder <code>Name;Name</code> wird auch unterstützt, weil sich Tabs nicht so gut tippen lassen (zum Import aus einer anderen Software per Copy/Paste sind Tabs aber natürlich perfekt). „Name, Vorname“ wird nicht unterstützt. Leerzeichen dürfen nur Namensbestandteile trennen, nicht vor oder hinter Namen stehen! Nicht erkennbare Namen werden schlicht ignoriert (silent fail).</SMALL>
+</FORM>
+
+</DIV>
+<DIV ID="tabs-4">
+
+<H2 style="display:none">Export / Druck</H2>
+<P>Die bearbeitete Liste kann zur Veröffentlichung hier per Copy+Paste in eine Textverarbeitung wie Word (oder RagTime) oder in eine Layout-Software wie InDesign (oder RagTime) oder in eine Tabellenkalkulation wie Excel (oder RagTime) übernommen werden. Die Daten in diesem Feld passen sich laufend automatisch dem momentanen Bearbeitungsstand der Stegdienstliste an.
+</P>
+<TEXTAREA COLS="75" ROWS="10" ID="exportdata" READONLY>
+</TEXTAREA>
+<P><SMALL><br>Langfristig könnte hier evtl. auch direkt der Druck möglich sein. Ferner soll hier die Liste in die Mitgliederdatenbank übernommen werden können. Mitglieder können dann z. B. E-Mail–Erinnerungen oder ein Kalenderabo bestellen.</SMALL>
 
 </DIV>
 </DIV>
 
+<P STYLE="font-size:1.5em">Unfinished Development Work – <STRONG>Technology Preview</STRONG>
+
+<TEXTAREA COLS="120" ROWS="20" ID="initdata" READONLY STYLE="display: none;">
+{
+members: [
+{ id: 1, name: 'Adam Alfa', remote: false, board: true },
+{ id: 2, name: 'Britta Bravo', remote: true, board: false },
+{ id: 3, name: 'Christa Charlie', remote: true, board: false },
+{ id: 4, name: 'Dieter Delta', remote: true, board: false },
+{ id: 5, name: 'Emil Echo', remote: false, board: false },
+{ id: 6, name: 'Frida Foxtrot', remote: true, board: true },
+{ id: 7, name: 'Gerhart Golf', remote: true, board: false },
+{ id: 8, name: 'Helmut Hotel', remote: false, board: false },
+{ id: 9, name: 'Ingmar India', remote: false, board: false },
+{ id: 10, name: 'Julie Juliett', remote: true, board: false },
+{ id: 11, name: 'Karoline Kilo', remote: false, board: true },
+{ id: 12, name: 'Ludwig Lima', remote: false, board: true },
+{ id: 13, name: 'Martina Mike', remote: true, board: false },
+{ id: 14, name: 'Nora November', remote: false, board: false },
+{ id: 15, name: 'Oskar Oscar', remote: false, board: false },
+{ id: 16, name: 'Pippa Papa', remote: true, board: false },
+]
+}
+</TEXTAREA>
+
+<TEXTAREA COLS="1" ROWS="1" ID="importdatatest" READONLY STYLE="display: none;">
+Frida Foxtrot	Christa Charlie
+Helmut Hotel	Karoline Kilo
+Martina Mike	Julie Juliett
+Oskar Oscar	Nora November
+Pippa Papa	Adam Alfa
+Ingmar India	Gerhart Golf
+Britta Bravo	Ludwig Lima
+Emil Echo	Dieter Delta
+Christa Charlie	Pippa Papa
+Ludwig Lima	Oskar Oscar
+Nora November	Dieter Delta
+Gerhart Golf	Emil Echo
+Karoline Kilo	Helmut Hotel
+Christa Charlie	Britta Bravo
+Pippa Papa	Martina Mike
+Oskar Oscar	Julie Juliett
+Ingmar India	Adam Alfa
+</TEXTAREA>
+<!-- 2014: keine Daten im Repository (Datenschutz) -->
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2014" READONLY STYLE="display: none;">
+</TEXTAREA>
+<!-- 2013: keine Daten im Repository (Datenschutz) -->
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2013" READONLY STYLE="display: none;">
+</TEXTAREA>
+<!-- 2012: keine Daten im Repository (Datenschutz) -->
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2012" READONLY STYLE="display: none;">
+</TEXTAREA>
+<!-- 2010: keine Daten im Repository (Datenschutz) -->
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2010" READONLY STYLE="display: none;">
+</TEXTAREA>
+<!-- 2009: keine Daten im Repository (Datenschutz) -->
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2009" READONLY STYLE="display: none;">
+</TEXTAREA>
 
 
 
 	
-	<P ID="foot">Version 1.1.8g<BR>2011-01<BR><EM>aj3</EM></P>
+	<P ID="foot"><BR> $Id$ <BR></P>
 </BODY></HTML>
