@@ -168,7 +168,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base" CHECKED> <STRONG>unverändert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu verwendendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
+	<P><LABEL>als Vorlage zu verwendendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014" SELECTED>2014</OPTION><OPTION VALUE="2014-draft">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
 </DIV>
 
 <P><INPUT TYPE="button" VALUE="Vorschlag erzeugen" CLASS="generate-suggestion-button" DISABLED>
@@ -277,6 +277,8 @@ Ingmar India	Adam Alfa
 </TEXTAREA>
 <!-- 2014: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2014" READONLY STYLE="display: none;">
+</TEXTAREA>
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2014-draft" READONLY STYLE="display: none;">
 </TEXTAREA>
 <!-- 2013: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2013" READONLY STYLE="display: none;">
