@@ -10,13 +10,13 @@
 <STYLE TYPE="text/css">
 @import url("jquery-ui-1.8.23.custom/development-bundle/themes/base/jquery.ui.all.css");
 META {  /* pre-load and cache dragging cursor; Safari 5.1.7 seems to need this */
-	cursor: url(https://mail.google.com/mail/images/2/closedhand.cur), pointer;
+	cursor: url(icons/closedhand.cur), pointer;
 }
 .ui-draggable {
-	cursor: url(https://mail.google.com/mail/images/2/openhand.cur), pointer;
+	cursor: url(icons/openhand.cur), pointer;
 }
 .ui-draggable-dragging {
-	cursor: url(https://mail.google.com/mail/images/2/closedhand.cur), pointer;
+	cursor: url(icons/closedhand.cur), pointer;
 	box-shadow: 0 0 10px 0px rgba(0,0,0,.8);
 	background-color: #dadada !important;
 	background-image: url(jquery-ui-1.8.23.custom/development-bundle/themes/base/images/ui-bg_glass_75_dadada_1x400.png) !important;
@@ -24,7 +24,13 @@ META {  /* pre-load and cache dragging cursor; Safari 5.1.7 seems to need this *
 	z-index: 10 !important;
 }
 .ui-widget {
-	font: 1em "Trebuchet MS", Arial, sans-serif;
+	font: .91em "Trebuchet MS", Arial, sans-serif;
+}
+body {
+	font-size: 85%;
+}
+.ui-tabs-panel {
+	min-height: 30em;
 }
 /*
 .ui-state-hover {
@@ -146,6 +152,8 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 	<LI><A HREF="#tabs-2">Stegdienstliste</A></LI>
 	<LI><A HREF="#tabs-3">Import</A></LI>
 	<LI><A HREF="#tabs-4">Export</A></LI>
+	<LI><A HREF="#tabs-5">Monte Carlo</A></LI>
+	<LI><A HREF="#tabs-6">Warnungen</A></LI>
 </UL>
 <DIV ID="tabs-1">
 
@@ -189,7 +197,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <H2 style="display:none">Stegdienstliste</H2>
 <TABLE ID="stegdienst">
 <THEAD>
-<TR><TH ID="warning-col"> <TH ID="date-col">Woche ab <TH COLSPAN="2" ID="member-cols">Eingeteilte Mitglieder
+<TR><TH ID="warning-col"> <TH ID="date-col">Woche ab <TH COLSPAN="2" ID="member-cols">Eingeteilte Mitglieder <INPUT TYPE=button CLASS=generate-suggestion-button VALUE="">
 <TBODY>
 </TABLE>
 
@@ -229,9 +237,21 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <P><SMALL><br>Langfristig könnte hier evtl. auch direkt der Druck möglich sein. Ferner soll hier die Liste in die Mitgliederdatenbank übernommen werden können. Mitglieder können dann z. B. E-Mail–Erinnerungen oder ein Kalenderabo bestellen.</SMALL>
 
 </DIV>
+<DIV ID="tabs-5">
+
+<H2 style="display:none">Monte Carlo</H2>
+
+</DIV>
+<DIV ID="tabs-6">
+
+<H2 style="display:none">Warnungen</H2>
+<TEXTAREA COLS="120" ROWS="25" ID="warningsarea" READONLY>
+</TEXTAREA>
+
+</DIV>
 </DIV>
 
-<P STYLE="font-size:1.5em">Unfinished Development Work – <STRONG>Technology Preview</STRONG>
+<P STYLE="font-size:1.5em;margin-bottom:5em">Unfinished Development Work – <STRONG>Technology Preview</STRONG>
 
 <TEXTAREA COLS="120" ROWS="20" ID="initdata" READONLY STYLE="display: none;">
 {

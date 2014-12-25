@@ -7,8 +7,8 @@ if (! window.SKGB) { window.SKGB = {}; }
 
 window.config = {
 	markWeekDay: 3,  // Wednesday
-	summerStart: {month: 2, day: 22+7}, // March 2014
-	summerEnd: {month: 9, day: 25-7}  // October 2014
+	summerStart: {month: 2, day: 14+7}, // March 2015
+	summerEnd: {month: 9, day: 31-7}  // October 2015
 };
 
 // onload:
@@ -30,15 +30,13 @@ $(function(){
 			membersColumnTableHeaderCell: $('TABLE#stegdienst TR:first-child>TH#member-cols')[0],
 			tableBody: $('TABLE#stegdienst>TBODY')[0],
 			tableHeaderRow: $('TABLE#stegdienst TR:first-child')[0],
-			getTableWarningCellInRow: function (i) {
-				return $($('TABLE#stegdienst>TBODY>TR')[i]).find('TD.warning')[0];
-			},
 			getTableCell: function (row, col) {
 				return $( 'TD.member', $('#stegdienst > TBODY > TR')[row] )[col];
 			},
 			strategyForm: $('#strategy')[0],
 			exportData: $('#exportdata')[0],
-			importData: $('#importdata')[0]
+			importData: $('#importdata')[0],
+			warningsArea: $('#warningsarea')[0]
 		};
 		SKGB.stegdienstController = new SKGB.StegdienstListeInterface(uiBindings);
 		SKGB.stegdienstController.resetInterface();
@@ -92,6 +90,7 @@ $(function(){
 function getSuggestionDates (config) {
 	var today = new Date();
 	var year = today.getFullYear() + (today.getMonth() < 8 ? 0 : 1);
+year = 2014; config.summerStart.month = 2; config.summerStart.day = 22+7; config.summerEnd.month = 9; config.summerEnd.day = 25-7;
 	var startDate = new Date(year, config.summerStart.month, config.summerStart.day, 12);
 	while (startDate.getDay() !== config.markWeekDay) {
 		startDate.setDate(startDate.getDate() - 1);
@@ -485,9 +484,13 @@ SKGB.StegdienstListeInterface.prototype.dataHasChanged = function () {
 	this.updateExport();
 	this.updateCount();
 	
+	var warnings = new SKGB.StegdienstListeWarningList(this.liste);
+	this.warnings = warnings;  // debug
+	this.ui.warningsArea.innerHTML = 'score: ' + warnings.score() + '\n' + warnings.asText();
+	$('th>input')[0].value = warnings.score();
+	
 	// dish out some warnings :)
-	this.updateMemberWarnings();
-	this.updateDateWarnings();
+//	this.updateDateWarnings();
 }
 
 
@@ -528,140 +531,6 @@ SKGB.StegdienstListeInterface.prototype.updateCount = function () {
 		}
 	}
 }
-
-
-SKGB.StegdienstListeInterface.prototype.updateMemberWarnings = function () {
-	// calculate statistics
-	var countFrequency = [0];
-	var boardMemberCount = 0;
-	for (var i = 0; i < this.liste.members.length; i++) {
-		var count = this.liste.members[i].count;
-		if (countFrequency[count]) {
-			countFrequency[count] += 1;
-		}
-		else {
-			countFrequency[count] = 1;
-		}
-		if (this.liste.members[i].board) {
-			boardMemberCount += 1;
-		}
-	}
-	
-	// find the modus
-	// (median would prolly be better here, as modus seems to require a fairly even distribution to achieve the result we want here)
-	var modus = 0;
-	for (var i = 0; i < countFrequency.length; i++) {
-		if (typeof countFrequency[i] === 'undefined') { continue; }
-		if (countFrequency[i] >= countFrequency[modus]) {
-			modus = i;
-			// don't break: find highest match if results are bi-modal
-		}
-	}
-	
-	var idealCount = modus;
-	var memberCountWithoutBoard = this.liste.members.length - boardMemberCount;
-	var dateItemCount = this.liste.data.length * 2;
-	var expectedMaxCount = Math.ceil( dateItemCount / memberCountWithoutBoard );
-	
-	// warnings and member statistics
-	for (var i = 0; i < this.liste.members.length; i++) {
-		var member = this.liste.members[i];
-		var countNode = $('#countNode' + member.id)[0];
-		if (! countNode) { continue; }
-		var statisticsHtml = member.count;
-		
-		var warningClass = 'ok';
-		var warningText = undefined;
-		if (member.count > idealCount) {
-			warningClass = 'note';
-			warningText = member.name + ' ist öfter eingeteilt als andere.';
-		}
-		if (! member.board && member.count < idealCount) {
-			warningClass = 'note';
-			warningText = member.name + ' ist seltener eingeteilt als andere.';
-		}
-		if (member.count == 0) {
-			warningClass = 'check';
-			warningText = member.name + ' ist nirgends eingeteilt.';
-		}
-		if (member.board && member.count > 1) {
-			warningClass = 'check';
-			warningText = member.name + ' ist Vorstandsmitglied und sollte nur einmal eingeteilt werden.';
-		}
-		if (member.count > expectedMaxCount) {
-			warningClass = 'error';
-			warningText = member.name + ' ist zu oft eingeteilt.';
-		}
-		if (member.board && member.count > expectedMaxCount - 1) {
-			warningClass = 'error';
-			warningText = member.name + ' ist Vorstandsmitglied und zu oft eingeteilt.';
-		}
-		statisticsHtml += ' ' + this.getWarningSymbolHtml(warningClass, warningText);
-		
-		countNode.innerHTML = statisticsHtml;
-	}
-}
-
-
-SKGB.StegdienstListeInterface.prototype.updateDateWarnings = function () {
-	
-	// warnings for individual dates
-	for (var i = 0; i < this.liste.data.length; i++) {
-		var dateItem = this.liste.data[i];
-		if (! dateItem) { continue; }
-		var warningNode = this.ui.getTableWarningCellInRow(i);
-		var warningClass = 'ok';
-		var warningText = '';
-		
-		// if a member slot is empty, the object is undefined; therefore we add the error message immediately and skip everything else to avoid JS errors
-		if (! dateItem[0] || ! dateItem[1]) {
-			warningNode.innerHTML = '<IMG SRC="icons/warning-error.png" WIDTH=16 HEIGHT=16 ALT="Es sind zu wenige Mitglieder für diesen Termin eingeteilt." TITLE="Fehler: Es sind zu wenige Mitglieder für diesen Termin eingeteilt.">';
-			continue;
-		}
-		
-		if (dateItem[0].remote && dateItem[1].remote) {
-			warningClass = 'note';
-			warningText = 'Alle Mitglieder dieses Datums sind &quot;fern&quot;.';
-		}
-		if (i > 0 && (
-				this.liste.data[i][0] && this.liste.data[i - 1][0] && this.liste.data[i][0].id == this.liste.data[i - 1][0].id ||
-				this.liste.data[i][0] && this.liste.data[i - 1][1] && this.liste.data[i][0].id == this.liste.data[i - 1][1].id || 
-				this.liste.data[i][1] && this.liste.data[i - 1][0] && this.liste.data[i][1].id == this.liste.data[i - 1][0].id || 
-				this.liste.data[i][1] && this.liste.data[i - 1][1] && this.liste.data[i][1].id == this.liste.data[i - 1][1].id )) {
-			warningClass = 'error';
-			warningText = 'Ein Mitglied ist für unmittelbar aufeinander folgende Daten vorgesehen.';
-		}
-		if (dateItem[0].id == dateItem[1].id) {
-			warningClass = 'error';
-			warningText = 'Ein Mitglied ist mehrfach für dasselbe Datum vorgesehen.';
-		}
-		
-		warningNode.innerHTML = this.getWarningSymbolHtml(warningClass, warningText);
-	}
-	
-	// warnings for individual members
-	
-	// other warnings (if any)
-}
-
-
-
-SKGB.StegdienstListeInterface.prototype.getWarningSymbolHtml = function (warningClass, warningText) {
-	if (warningClass == 'ok') {
-		return '<IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
-	}
-	else if (warningClass == 'note') {
-		return '<IMG SRC="icons/warning-note.png" WIDTH=16 HEIGHT=16 ALT="' + warningText + '" TITLE="Hinweis: ' + warningText + '">';
-	}
-	else if (warningClass == 'check') {
-		return '<IMG SRC="icons/warning-caution.png" WIDTH=16 HEIGHT=16 ALT="' + warningText + '" TITLE="Warnung: ' + warningText + '">';
-	}
-	else if (warningClass == 'error') {
-		return '<IMG SRC="icons/warning-error.png" WIDTH=16 HEIGHT=16 ALT="' + warningText + '" TITLE="Fehler: ' + warningText + '">';
-	}
-	throw 'unknown warning class';
-}
-
 
 
 SKGB.StegdienstListeInterface.prototype.interactiveChange = function (change) {
@@ -895,3 +764,283 @@ function getMemberReference (node) {
 	return null;
 }
 
+
+
+// ====================================================
+
+SKGB.StegdienstListeWarningList = function (liste) {
+	this.liste = liste;
+	this.warnings = [];
+	// method to add new warning
+	// manages all the details
+	this.memberWarnings();
+	this.dateWarnings();
+	this.updateMemberWarningsHtml();
+	this.updateDateWarningsHtml();
+	// supposed to read config (warning penalties etc) from UI, but has them hard-coded at the beginning
+}
+// has a list of warnings
+// method to clear list = simply new()
+//SKGB.StegdienstListeWarningList.prototype.warnings = [];  // wird dies wirklich geklont bei new?
+
+// method to write warnings to warning list
+SKGB.StegdienstListeWarningList.prototype.asText = function () {
+	var text = '';
+	for (var i = 0; i < this.warnings.length; i++) {
+		text += this.warnings[i].asString() + '\n';
+	}
+	return text;
+}
+
+SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
+	// calculate statistics
+	var countFrequency = [0];
+	var boardMemberCount = 0;
+	for (var i = 0; i < this.liste.members.length; i++) {
+		var count = this.liste.members[i].count;
+		if (countFrequency[count]) {
+			countFrequency[count] += 1;
+		}
+		else {
+			countFrequency[count] = 1;
+		}
+		if (this.liste.members[i].board) {
+			boardMemberCount += 1;
+		}
+	}
+	
+	// find the modus
+	// (median would prolly be better here, as modus seems to require a fairly even distribution to achieve the result we want here)
+	var modus = 0;
+	for (var i = 0; i < countFrequency.length; i++) {
+		if (typeof countFrequency[i] === 'undefined') { continue; }
+		if (countFrequency[i] >= countFrequency[modus]) {
+			modus = i;
+			// don't break: find highest match if results are bi-modal
+		}
+	}
+	
+	var idealCount = modus;
+	var memberCountWithoutBoard = this.liste.members.length - boardMemberCount;
+	var dateItemCount = this.liste.data.length * 2;
+	var expectedMaxCount = Math.ceil( dateItemCount / memberCountWithoutBoard );
+	
+	// warnings and member statistics
+	for (var i = 0; i < this.liste.members.length; i++) {
+		var member = this.liste.members[i];
+		var countNode = $('#countNode' + member.id)[0];
+		if (! countNode) { continue; }  // why???????????????
+		
+		if (member.count > idealCount) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'note',
+				text: 'öfter eingeteilt als andere',
+				member: member
+			}) );
+		}
+		if (! member.board && member.count < idealCount) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'note',
+				text: 'seltener eingeteilt als andere',
+				member: member
+			}) );
+		}
+		if (member.count == 0) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'check',
+				text: 'nirgends eingeteilt',
+				member: member
+			}) );
+		}
+		if (member.board && member.count > 1) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'check',
+				text: 'Vorstandsmitglied und sollte nur einmal eingeteilt werden',
+				member: member
+			}) );
+		}
+		if (member.count > expectedMaxCount) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'error',
+				text: 'zu oft eingeteilt',
+				member: member
+			}) );
+		}
+		if (member.board && member.count > expectedMaxCount - 1) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'error',
+				text: 'Vorstandsmitglied und zu oft eingeteilt',
+				member: member
+			}) );
+		}
+	}
+}
+
+SKGB.StegdienstListeWarningList.prototype.dateWarnings = function () {
+	
+	// warnings for individual dates
+	for (var i = 0; i < this.liste.data.length; i++) {
+		var dateItem = this.liste.data[i];
+		if (! dateItem) { continue; }
+//		var warningNode = this.ui.getTableWarningCellInRow(i);
+		var warningClass = 'ok';
+		var warningText = '';
+		
+		// if a member slot is empty, the object is undefined; therefore we add the error message immediately and skip everything else to avoid JS errors
+		if (! dateItem[0] || ! dateItem[1]) {
+			this.warnings.push( new SKGB.StegdienstListeDateWarning({
+				severity: 'error',
+				text: 'Es sind zu wenige Mitglieder für diesen Termin eingeteilt.',
+				dateIndex: i
+			}) );
+			continue;
+		}
+		
+		if (dateItem[0].remote && dateItem[1].remote) {
+			this.warnings.push( new SKGB.StegdienstListeDateWarning({
+				severity: 'note',
+				text: 'Alle Mitglieder dieses Datums sind &quot;fern&quot;.',
+				dateIndex: i
+			}) );
+		}
+		if (i > 0 && (
+				dateItem[0] && this.liste.data[i - 1][0] && dateItem[0].id == this.liste.data[i - 1][0].id ||
+				dateItem[0] && this.liste.data[i - 1][1] && dateItem[0].id == this.liste.data[i - 1][1].id )) {
+			this.warnings.push( new SKGB.StegdienstListeDateWarning({
+				severity: 'error',
+				text: 'Ein Mitglied ist für unmittelbar aufeinander folgende Daten vorgesehen.',
+				dateIndex: i,
+				member: this.liste.data[i][0]
+			}) );
+		}
+		if (i > 0 && (
+				dateItem[1] && this.liste.data[i - 1][0] && dateItem[1].id == this.liste.data[i - 1][0].id || 
+				dateItem[1] && this.liste.data[i - 1][1] && dateItem[1].id == this.liste.data[i - 1][1].id )) {
+			this.warnings.push( new SKGB.StegdienstListeDateWarning({
+				severity: 'error',
+				text: 'Ein Mitglied ist für unmittelbar aufeinander folgende Daten vorgesehen.',
+				dateIndex: i,
+				member: this.liste.data[i][1]
+			}) );
+		}
+		if (dateItem[0].id == dateItem[1].id) {
+			this.warnings.push( new SKGB.StegdienstListeDateWarning({
+				severity: 'error',
+				text: 'Ein Mitglied ist mehrfach für dasselbe Datum vorgesehen.',
+				dateIndex: i,
+				member: dateItem[0]
+			}) );
+		}
+		
+//		warningNode.innerHTML = this.getWarningSymbolHtml(warningClass, warningText);
+	}
+	
+	// warnings for individual members
+	
+	// other warnings (if any)
+}
+
+// method(s) (or automatism?) to write warning(s) to individual items, taking into account precedence (not yet)
+SKGB.StegdienstListeWarningList.prototype.updateMemberWarningsHtml = function () {
+	for (var i = 0; i < this.liste.members.length; i++) {
+		var member = this.liste.members[i];
+		var countNode = $('#countNode' + member.id)[0];
+		if (! countNode) { continue; }
+		var warningClass = 'ok';
+		var warningText = undefined;
+		// besser indizieren?
+		var statisticsHtml = '' + member.count + ' <IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
+		for (var j = 0; j < this.warnings.length; j++) {
+			if (! this.warnings[j] instanceof SKGB.StegdienstListeMemberWarning) {
+				continue;
+			}
+			if (this.warnings[j].member != member) {
+				continue;
+			}
+			statisticsHtml = '' + this.warnings[j].member.count + ' ' + this.warnings[j].asHtml();
+		}
+		countNode.innerHTML = statisticsHtml;
+	}
+}
+
+SKGB.StegdienstListeWarningList.prototype.updateDateWarningsHtml = function () {
+	for (var i = 0; i < this.liste.data.length; i++) {
+		var dateItem = this.liste.data[i];
+		if (! dateItem) { continue; }
+		var warningNode = $($('TABLE#stegdienst>TBODY>TR')[i]).find('TD.warning')[0];
+/*
+		var warningNode = this.ui.getTableWarningCellInRow(i);
+			getTableWarningCellInRow: function (i) {
+				return $($('TABLE#stegdienst>TBODY>TR')[i]).find('TD.warning')[0];
+			},
+*/
+		var warningClass = 'ok';
+		var warningText = '';
+		
+		var statisticsHtml = '<IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
+		for (var j = 0; j < this.warnings.length; j++) {
+			if (! this.warnings[j] instanceof SKGB.StegdienstListeDateWarning) {
+				continue;
+			}
+			if (this.warnings[j].dateIndex != i) {
+				continue;
+			}
+			statisticsHtml = this.warnings[j].asHtml();
+		}
+		warningNode.innerHTML = statisticsHtml;
+	}
+	
+	// other warnings (if any)
+}
+
+SKGB.StegdienstListeWarningList.prototype.score = function () {
+	return 0 - this.warnings.length;
+}
+
+
+SKGB.StegdienstListeWarning = function (options) {
+	this.init(options);
+}
+SKGB.StegdienstListeWarning.prototype.init = function (options) {
+	if (! options) { return; }
+	this.severity = options.severity;
+	this.text = options.text;
+	this.member = options.member;
+	this.dateIndex = options.dateIndex;
+}
+SKGB.StegdienstListeWarning.prototype.severity = undefined;
+SKGB.StegdienstListeWarning.prototype.text = undefined;
+SKGB.StegdienstListeWarning.prototype.asHtml = function () {
+	if (this.severity == 'ok') {
+		return '<IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
+	}
+	else if (this.severity == 'note') {
+		return '<IMG SRC="icons/warning-note.png" WIDTH=16 HEIGHT=16 ALT="' + this.text + '" TITLE="Hinweis: ' + this.text + '">';
+	}
+	else if (this.severity == 'check') {
+		return '<IMG SRC="icons/warning-caution.png" WIDTH=16 HEIGHT=16 ALT="' + this.text + '" TITLE="Warnung: ' + this.text + '">';
+	}
+	else if (this.severity == 'error') {
+		return '<IMG SRC="icons/warning-error.png" WIDTH=16 HEIGHT=16 ALT="' + this.text + '" TITLE="Fehler: ' + this.text + '">';
+	}
+	throw 'unknown warning class';
+}
+
+SKGB.StegdienstListeMemberWarning = function (options) {
+	this.init(options);
+}
+SKGB.StegdienstListeMemberWarning.prototype = new SKGB.StegdienstListeWarning();
+SKGB.StegdienstListeMemberWarning.prototype.asString = function () {
+	return this.severity + ': ' + this.member.name + ': ist ' + this.text;
+}
+SKGB.StegdienstListeDateWarning = function (options) {
+	this.init(options);
+}
+SKGB.StegdienstListeDateWarning.prototype = new SKGB.StegdienstListeWarning();
+SKGB.StegdienstListeDateWarning.prototype.asString = function () {
+	var info = this.dateIndex;
+	if (this.member) {
+		info += ' / ' + this.member.name;
+	}
+	return this.severity + ': ' + info + ': ' + this.text;
+}
