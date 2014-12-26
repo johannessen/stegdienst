@@ -165,26 +165,27 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
 	<P><LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="id" CHECKED> nach interner Datenbank-ID</LABEL>
-	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname"> nach Vorname</LABEL>
-	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="sortkey" DISABLED> nach Nachname</LABEL>
+	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname"> nach Name</LABEL>
+	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="lastname"> nach Nachname</LABEL>
+	<P><LABEL><INPUT TYPE="checkbox" NAME="descending" VALUE="yes"> absteigend</LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="random"> <STRONG>zufällig</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" DISABLED CHECKED> mit Zurücklegen</LABEL>
-	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" DISABLED> ohne Zurücklegen</LABEL>
-	<P><LABEL CLASS="not-implemented"><INPUT TYPE="checkbox" DISABLED> leicht vermeidbare Fehler berücksichtigen</LABEL>
+	<P><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" VALUE="without" DISABLED> ohne Zurücklegen</LABEL>
+	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" VALUE="with" DISABLED CHECKED> mit Zurücklegen</LABEL>
+	<P><LABEL CLASS="not-implemented"><INPUT TYPE="checkbox" NAME="smart" VALUE="yes" DISABLED> leicht vermeidbare Fehler berücksichtigen</LABEL>
 </DIV>
-<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base" CHECKED> <STRONG>unverändert</STRONG></LABEL>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>mit Vorlage</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu verwendendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014" SELECTED>2014</OPTION><OPTION VALUE="2014-draft">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
+	<P><LABEL>unverändert zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014" SELECTED>2014</OPTION><OPTION VALUE="2014-draft">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
 </DIV>
 
 <P><INPUT TYPE="button" VALUE="Vorschlag erzeugen" CLASS="generate-suggestion-button" DISABLED>
 <P CLASS="overwrite-warning"><EM>(der aktuelle Listenentwurf wird überschrieben!)</EM>
 
-<P style="margin-top:3em"><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="strategy" VALUE="montecarlo" DISABLED> <STRONG>optimiert</STRONG></LABEL>
+<P style="margin-top:3em"><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="montecarlo" CHECKED> <STRONG>optimiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P CLASS="not-implemented"><EM>noch nicht implementiert</EM>
+	<!--P CLASS="not-implemented"><EM>noch nicht implementiert</EM-->
 	<P>Monte-Carlo–Methoden erlauben es, auch dann einen Lösungsvorschlag zu liefern, wenn die Randbedingungen (nah/fern, genau zwei Stegdienste etc.) nicht alle erfüllt werden können. Während ein solcher Vorschlag nicht ohne interaktive Prüfung weiterverwendet werden sollte, wird er <EM>wahrscheinlich</EM> nur noch minimale Nachbearbeitung erfordern. Das funktioniert, indem für eine sehr große Anzahl zufälliger Vorschläge anhand einer Metrik die jeweilige Tauglichkeit als Stegdienstliste berechnet und aus dieser Menge dann derjenige Vorschlag ausgewählt wird, der die wenigsten Randbedingungen verletzt.
 	<P>Da die Metrik auf mehreren verschiedenen Einzelmerkmalen basiert, wird diese Strategie über eine entsprechende Anzahl von Einstellungen verfügen, mit deren Hilfe der Nutzer das Verhalten der Strategie detailliert kontrollieren kann.
 	<P>mehr Informationen: <A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Simulation">Wikipedia zur Monte-Carlo–Methodik</A>
