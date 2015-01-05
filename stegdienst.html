@@ -6,7 +6,7 @@
 <STYLE TYPE="text/css">
 @import url("intern1.css");
 </STYLE>
-	
+
 <STYLE TYPE="text/css">
 @import url("jquery-ui-1.8.23.custom/development-bundle/themes/base/jquery.ui.all.css");
 META {  /* pre-load and cache dragging cursor; Safari 5.1.7 seems to need this */
@@ -141,26 +141,40 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 	<DIV CLASS="hide">Zum <A HREF="#menu" ACCESSKEY="2">Menü</A> springen.</DIV>
 	<DIV ID="head"><H1>SKGB<EM>-intern</EM> <STRONG>Vorstandsbereich</STRONG></H1></DIV>
 
+<P STYLE="position: absolute; margin-left: 10em">Score = <INPUT TYPE=button CLASS=generate-suggestion-button ID=scorebutton VALUE="-∞" TITLE="klicken, um neuen Vorschlag zu generieren">     <INPUT TYPE=button ID=warningsbutton VALUE="Warnungen" onclick="$('#tabs').tabs('select', 2)">
+
 
 <DIV ID="menu"><UL>
 	<LI><A HREF="/digest/vorstand/">zurück zum Menü</A></LI>
 </UL><HR></DIV>
 
+<!-- Strategie (inkl. Import) | Parameter/Einstellungen | Liste+Warnungen | Export -->
 <DIV ID="tabs">
 <UL>
-	<LI><A HREF="#tabs-1">Vorschlag berechnen</A></LI>
-	<LI><A HREF="#tabs-2">Stegdienstliste</A></LI>
-	<LI><A HREF="#tabs-3">Import</A></LI>
-	<LI><A HREF="#tabs-4">Export</A></LI>
-	<LI><A HREF="#tabs-5">Monte Carlo</A></LI>
+	<LI><A HREF="#tabs-1">Strategie</A></LI>
+	<LI><A HREF="#tabs-5">Parameter</A></LI>
 	<LI><A HREF="#tabs-6">Warnungen</A></LI>
+	<LI><A HREF="#tabs-2">Stegdienstliste</A></LI>
+	<LI><A HREF="#tabs-4">Export</A></LI>
+	<LI class=hide><A HREF="#tabs-3">Import</A></LI>
 </UL>
 <DIV ID="tabs-1">
 
 <H2 style="display:none">Vorschlags-Strategie</H2>
 <FORM ACTION="" NAME="strategy" ID="strategy">
-<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="blank"> <STRONG>leere Liste</STRONG></LABEL>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="montecarlo" CHECKED> <STRONG>optimiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
+	<P>aus einer Vielzahl zufälliger Vorschläge automatisch anhand von Parametern den besten auswählen
+</DIV>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="random"> <STRONG>zufällig</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P><LABEL><INPUT TYPE="radio" NAME="randomiser" VALUE="without" CHECKED> ziehen ohne Zurücklegen</LABEL>
+	<LABEL><INPUT TYPE="radio" NAME="randomiser" VALUE="with"> ziehen mit Zurücklegen</LABEL>
+	<P><LABEL><INPUT TYPE="checkbox" NAME="smart" VALUE="yes" CHECKED> leicht vermeidbare Fehler berücksichtigen</LABEL>
+</DIV>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>unverändert</STRONG></LABEL>
+<DIV CLASS="strategy-options">
+	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014">2014</OPTION><OPTION VALUE="2014-draft">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
@@ -169,27 +183,16 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="lastname"> nach Nachname</LABEL>
 	<P><LABEL><INPUT TYPE="checkbox" NAME="descending" VALUE="yes"> absteigend</LABEL>
 </DIV>
-<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="random"> <STRONG>zufällig</STRONG></LABEL>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="import"> <STRONG>importiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" VALUE="without" DISABLED> ohne Zurücklegen</LABEL>
-	<LABEL CLASS="not-implemented"><INPUT TYPE="radio" NAME="randomiser" VALUE="with" DISABLED CHECKED> mit Zurücklegen</LABEL>
-	<P><LABEL CLASS="not-implemented"><INPUT TYPE="checkbox" NAME="smart" VALUE="yes" DISABLED> leicht vermeidbare Fehler berücksichtigen</LABEL>
+	<P>aus Zwischenablage
 </DIV>
-<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>mit Vorlage</STRONG></LABEL>
+<P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="blank"> <STRONG>leere Liste</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>unverändert zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2014" SELECTED>2014</OPTION><OPTION VALUE="2014-draft">2014 – Entwurf 7. Feb.</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
 </DIV>
 
 <P><INPUT TYPE="button" VALUE="Vorschlag erzeugen" CLASS="generate-suggestion-button" DISABLED>
 <P CLASS="overwrite-warning"><EM>(der aktuelle Listenentwurf wird überschrieben!)</EM>
-
-<P style="margin-top:3em"><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="montecarlo" CHECKED> <STRONG>optimiert</STRONG></LABEL>
-<DIV CLASS="strategy-options">
-	<!--P CLASS="not-implemented"><EM>noch nicht implementiert</EM-->
-	<P>Monte-Carlo–Methoden erlauben es, auch dann einen Lösungsvorschlag zu liefern, wenn die Randbedingungen (nah/fern, genau zwei Stegdienste etc.) nicht alle erfüllt werden können. Während ein solcher Vorschlag nicht ohne interaktive Prüfung weiterverwendet werden sollte, wird er <EM>wahrscheinlich</EM> nur noch minimale Nachbearbeitung erfordern. Das funktioniert, indem für eine sehr große Anzahl zufälliger Vorschläge anhand einer Metrik die jeweilige Tauglichkeit als Stegdienstliste berechnet und aus dieser Menge dann derjenige Vorschlag ausgewählt wird, der die wenigsten Randbedingungen verletzt.
-	<P>Da die Metrik auf mehreren verschiedenen Einzelmerkmalen basiert, wird diese Strategie über eine entsprechende Anzahl von Einstellungen verfügen, mit deren Hilfe der Nutzer das Verhalten der Strategie detailliert kontrollieren kann.
-	<P>mehr Informationen: <A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Simulation">Wikipedia zur Monte-Carlo–Methodik</A>
-</DIV>
 </FORM>
 
 </DIV>
@@ -198,7 +201,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <H2 style="display:none">Stegdienstliste</H2>
 <TABLE ID="stegdienst">
 <THEAD>
-<TR><TH ID="warning-col"> <TH ID="date-col">Woche ab <TH COLSPAN="2" ID="member-cols">Eingeteilte Mitglieder <INPUT TYPE=button CLASS=generate-suggestion-button VALUE="">
+<TR><TH ID="warning-col"> <TH ID="date-col">Woche ab <TH COLSPAN="2" ID="member-cols">Eingeteilte Mitglieder
 <TBODY>
 </TABLE>
 
@@ -240,7 +243,26 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 </DIV>
 <DIV ID="tabs-5">
 
-<H2 style="display:none">Monte Carlo</H2>
+<H2 style="display:none">Parameter</H2>
+<P>Monte-Carlo–Methoden erlauben es, auch dann einen Lösungsvorschlag zu liefern, wenn die Randbedingungen (nah/fern, genau zwei Stegdienste etc.) nicht alle erfüllt werden können. Während ein solcher Vorschlag nicht ohne interaktive Prüfung weiterverwendet werden sollte, wird er <EM>wahrscheinlich</EM> nur noch minimale Nachbearbeitung erfordern. Das funktioniert, indem für eine sehr große Anzahl zufälliger Vorschläge anhand einer Metrik die jeweilige Tauglichkeit als Stegdienstliste berechnet und aus dieser Menge dann derjenige Vorschlag ausgewählt wird, der die wenigsten Randbedingungen verletzt.
+<P>Da die Metrik auf mehreren verschiedenen Einzelmerkmalen basiert, wird die Monte-Carlo-Strategie (welche in der Strategie-Liste „optimiert“ heißt) hier über eine entsprechende Anzahl von Einstellungen verfügen, mit deren Hilfe der Nutzer das Verhalten der Strategie detailliert kontrollieren kann. Im Augenblick ist zwar der Monte-Carlo-Algorithmus schon funktionsfähig implementiert, aber noch fast keines der Einzelmerkmale. Für die meisten wird eine erweiterte Datenbank benötigt, die jedoch von SKGB-intern 1.x nicht ohne Weiteres unterstützt werden kann. Daher wird diese App vorerst noch ein bloßes „Preview“ bleiben.
+<P style="margin-bottom:0">Im Augenblick sind provisorisch die folgenden Parameter fest eingebaut. Weil „optimiert“ allerdings immer den besten Zufallsalgorithmus verwendet (ohne zurücklegen, einfache Fehler vermeiden), kommt derzeit lediglich das „fern/fern“-Kriterium beim vollautomatischen Optimieren zum Tragen.
+<UL style="margin-top:0;margin-bottom:0">
+<LI>fern/fern = –0.5 score penalty
+<LI>öfter/seltener als Modus = –0.5 score penalty
+<LI>unangemessen oft = –10.0 score penalty
+<LI>freigestellt = –5.0 score penalty
+<LI>Vorstand mehrfach = –5.0 score penalty
+<LI>Doppelzuteilung = –10.0 score penalty
+<LI>Unterzuteilung = –10.0 score penalty
+<LI>Nebenzuteilung = –5.0 score penalty
+</UL>
+<P>Selbstverständlich ist zu erwarten, dass eine finale Version dieser App eine halbwegs benutzerfreundliche Oberfläche und „sensible defaults“ hat anstelle eines solchen kryptischen Zahlenwirrwarrs. (Mal sehen, ob und ggf. wann die Erwartung wahr wird…)
+<P style="margin-top: 2em">mehr Informationen:
+<UL>
+<LI><P><A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Algorithmus">Wikipedia zur Monte-Carlo–Methodik</A>
+<LI><P><A HREF="../gs-verein/">Hintergründe zur Motivation für SKGB-intern 2.0</A>
+</UL>
 
 </DIV>
 <DIV ID="tabs-6">
@@ -273,6 +295,16 @@ members: [
 { id: 14, name: 'Nora November', remote: false, board: false },
 { id: 15, name: 'Oskar Oscar', remote: false, board: false },
 { id: 16, name: 'Pippa Papa', remote: true, board: false },
+{ id: 17, name: 'Qādir Quebec', remote: false, board: false },
+{ id: 18, name: 'Rebekka Romeo', remote: true, board: false },
+{ id: 19, name: 'Samira Sierra', remote: false, board: true },
+{ id: 20, name: 'Timmy Tango', remote: true, board: false },
+{ id: 21, name: 'Ulrike Uniform', remote: true, board: false },
+{ id: 22, name: 'Veronika Victor', remote: false, board: false },
+{ id: 23, name: 'Wladimir Whiskey', remote: true, board: true },
+{ id: 24, name: 'Xander X. Ray', remote: true, board: false },
+{ id: 25, name: 'Yasmin Yankee', remote: false, board: false },
+{ id: 26, name: 'Zoë Zulu', remote: true, board: false },
 ]
 }
 </TEXTAREA>

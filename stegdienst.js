@@ -63,23 +63,39 @@ $(function(){
 		$('#strategy input[name="strategy"][value="sorted"]').click();
 		var lastnameChecked = $('#strategy input[name="sortkey"][value="lastname"]')[0].checked;
 		$('#strategy input[name="descending"]')[0].disabled = lastnameChecked;
+		$('#strategy input[name="descending"]')[0].parentNode.className = lastnameChecked ? 'not-implemented' : '';
 		if (lastnameChecked) {
 			$('#strategy input[name="descending"]')[0].checked = false;
 		}
 	});
+	$('#strategy input[name="descending"]').click(function () {
+		$('#strategy input[name="strategy"][value="sorted"]').click();
+	});
+//	$('#strategy input[name="strategy"]').click(function () {
+//		var importChecked = $('#strategy input[name="strategy"][value="import"]')[0].checked;
+//		$('#strategy .generate-suggestion-button')[0].value = importChecked ? 'Liste importieren…' : 'Vorschlag erzeugen';
+//	});
 	$('#strategy input[name="randomiser"]').change(function () {
 		$('#strategy input[name="strategy"][value="random"]').click();
+		var withChecked = $('#strategy input[name="randomiser"][value="with"]')[0].checked;
+		$('#strategy input[name="smart"]')[0].disabled = withChecked;
+		$('#strategy input[name="smart"]')[0].parentNode.className = withChecked ? 'not-implemented' : '';
 	});
 	$('#strategy select[name="basedata"]').change(function () {
 		$('#strategy input[name="strategy"][value="base"]').click();
 	});
 	$('.generate-suggestion-button').click(function () {
+		var importChecked = $('#strategy input[name="strategy"][value="import"]')[0].checked;
+		if (importChecked) {
+			$('#tabs').tabs('select', 5);
+			return;
+		}
 		reset();
 		SKGB.stegdienstController.generateSuggestions(dates);
 		newData();
 	});
-	$('.generate-suggestion-button')[0].disabled = false;
 	$('.generate-suggestion-button')[1].disabled = false;
+	$('.generate-suggestion-button')[2].disabled = false;
 
 	$('#import-form input[name="import"]').click(function () {
 		reset();
@@ -89,17 +105,17 @@ $(function(){
 	$('#import-form input[name="import"]')[0].disabled = false;
 	
 // :DEBUG:
-	$('#tabs').tabs('select', 1);
-	reset();
-	SKGB.stegdienstController.generateSuggestions(dates);
-	newData();
+//	$('#tabs').tabs('select', 1);
+//	reset();
+//	SKGB.stegdienstController.generateSuggestions(dates);
+//	newData();
 });
 
 
 function getSuggestionDates (config) {
 	var today = new Date();
 	var year = today.getFullYear() + (today.getMonth() < 8 ? 0 : 1);
-year = 2014; config.summerStart.month = 2; config.summerStart.day = 22+7; config.summerEnd.month = 9; config.summerEnd.day = 25-7;
+//year = 2014; config.summerStart.month = 2; config.summerStart.day = 22+7; config.summerEnd.month = 9; config.summerEnd.day = 25-7;
 	var startDate = new Date(year, config.summerStart.month, config.summerStart.day, 12);
 	while (startDate.getDay() !== config.markWeekDay) {
 		startDate.setDate(startDate.getDate() - 1);
@@ -160,17 +176,18 @@ SKGB.StegdienstListe.prototype.generateMonteCarloSuggestions = function (members
 	var worstScore = +Infinity;
 	var iterations = 0;
 	
-	var end = new Date( new Date().valueOf() + 100 );
+	var end = new Date( new Date().valueOf() + 200 );
 	do {
 		for (var i = 0; i < 10; i++) {
 			var liste = new SKGB.StegdienstListe();
 			liste.members = members;  // what exactly does this do? do we even need it?
-			liste.setDateRange(dates);  // what exactly does this do? do we even need it?
-			liste.generateRandomSuggestions(members, dates, membersPerDate, false, true);
+//			liste.setDateRange(dates);  // what exactly does this do? do we even need it?
+			liste.generateShuffledSuggestions(members, dates, membersPerDate, true);
 			liste.updateCount();
 			var warnings = new SKGB.StegdienstListeWarningList(liste);
 //			console.log('#' + iterations + ' score: ' + warnings.displayScore());
 			if (warnings.score() > bestScore) {
+				console.log((bestScore > -Infinity ? 'better ' : '') + 'solution (' + warnings.score() + ') at #' + iterations);
 				bestScore = warnings.score();
 				for (var j = 0; j < liste.data.length; j++) {
 					this.data[j] = liste.data[j];
@@ -192,23 +209,71 @@ SKGB.StegdienstListe.prototype.generateMonteCarloSuggestions = function (members
 }
 
 
-SKGB.StegdienstListe.prototype.generateRandomSuggestions = function (members, dates, membersPerDate, replacement, smart) {
+SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, dates, membersPerDate, smart) {
 	
-	// :TODO:
-	// - array with length (date count * 2)
-	// - if (member count) members still fit into array: push (member count) members into array
-	//   else: sensibly fill up remaining space, perhaps by iterating through the members list once while calculating a probablity with which each member is supposed to be picked; this probablity must increase every time the iteration is advanced and also every time a member is picked; probablity = 1 if remaining members == remaining slots
-	// - create shadow array, same length, filled with random numbers
-	// - sort array 1 into order defined by shadow array
-	// is there a simpler way?
+	function swap (array, i, j) {
+		var item = array[j];
+		array[j] = array[i];
+		array[i] = item;
+	}
 	
-	var memberIndex;
+	function fisherYatesShuffle (array) {
+		for (var i = array.length - 1; i >= 1; i--) {
+			var j = parseInt(Math.random() * (i + 1));  // 0 ≤ j ≤ i  :  0 ≤ Math.random() < 1
+			swap(array, i, j);
+		}
+	}
+	
+	// the strategy: shuffle member list (so as to randomise which members have more dates than others)
+	// then assign dates from that list and shuffle again (so as to not have predictable repetition in the Stegdienstliste)
+	
+	var membersShuffled = members.slice();
+	fisherYatesShuffle( membersShuffled );
+	
+	var memberAssignees = new Array( dates.length * membersPerDate );
+	var j = 0;
+	for (var i = 0; i < memberAssignees.length; i++) {
+		if (j >= membersShuffled.length) {
+			j = 0;  
+		}
+		if (smart && i >= membersShuffled.length) {
+			// prevent board members from being assigned multiple times
+			// BUG: infinite loop if all members are board members
+			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
+			while (membersShuffled[j].board || (i >= membersShuffled.length * 2 - 5 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
+				j++;
+				if (j >= membersShuffled.length) {
+					j = 0;  
+				}
+			}
+		}
+		memberAssignees[i] = membersShuffled[j];
+		j++;
+	}
+//	fisherYatesShuffle( memberAssignees );
+	// the problem here is that leaving out the second shuffle automatically makes the resulting list more or less usable; it's less random but this lack of randomness makes it more likely other requirements (that aren't yet implemented) are met
+	// however, an undesired side effect is that board members are only assigned to some random dates early in the year
+	
+	var assigneeIndex = 0;
+	for (var dateIndex = 0; dateIndex < dates.length; dateIndex++) {
+		this.data[dateIndex] = new Array(membersPerDate);
+		for (var i = 0; i < membersPerDate; i++) {
+			
+			this.data[dateIndex][i] = memberAssignees[assigneeIndex];
+			assigneeIndex++;
+		}
+	}
+}
+
+
+SKGB.StegdienstListe.prototype.generateRandomSuggestions = function (members, dates, membersPerDate, smart) {
+	
 	for (var dateIndex = 0; dateIndex < dates.length; dateIndex++) {
 		this.data[dateIndex] = new Array(membersPerDate);
 		for (var i = 0; i < membersPerDate; i++) {
 			
 			// the 'strategy': simply randomize everything
-			memberIndex = parseInt(Math.random() * members.length);
+			var memberIndex = parseInt(Math.random() * members.length);
 			
 			this.data[dateIndex][i] = members[memberIndex];
 		}
@@ -383,9 +448,14 @@ SKGB.StegdienstListeInterface.prototype.generateSuggestions = function (dates) {
 	// actually generate those suggestions
 	var strategy = $('#strategy input[name="strategy"]:checked')[0].value;
 	if (strategy == 'random') {
-		var replacement = $('#strategy input[name="randomiser"]:checked')[0].value == 'with';
 		var smart = $('#strategy input[name="smart"]')[0].checked;
-		this.liste.generateRandomSuggestions(members, dates, membersPerDate, replacement, smart);
+		var replacement = $('#strategy input[name="randomiser"]:checked')[0].value == 'with';
+		if (replacement) {
+			this.liste.generateRandomSuggestions(members, dates, membersPerDate, smart);
+		}
+		else {
+			this.liste.generateShuffledSuggestions(members, dates, membersPerDate, smart);
+		}
 	}
 	else if (strategy == 'sorted') {
 		var sortKey = $('#strategy input[name="sortkey"]:checked')[0].value
@@ -433,7 +503,7 @@ SKGB.StegdienstListeInterface.prototype.createStegdienstDom = function (dates) {
 		date.setDate(date.getDate() + 7);
 	}
 	
-	$('#tabs').tabs('select', 1);
+	$('#tabs').tabs('select', 3);
 	location.hash = "#tabs";
 	
 //	this.dataHasChanged();
@@ -572,10 +642,11 @@ SKGB.StegdienstListeInterface.prototype.dataHasChanged = function () {
 	this.liste.updateCount();
 	
 	var warnings = new SKGB.StegdienstListeWarningList(this.liste);
-	this.warnings = warnings;  // debug
+//	this.warnings = warnings;  // debug
 	warnings.updateWarningsHtml();
-	this.ui.warningsArea.innerHTML = 'score: ' + warnings.score() + '\n' + warnings.asText();
-	$('th>input')[0].value = warnings.displayScore();
+	this.ui.warningsArea.innerHTML = 'score: ' + warnings.score() + '\n\n' + warnings.asText();
+	$('#scorebutton')[0].value = warnings.displayScore();
+	$('#warningsbutton')[0].value = warnings.warnings.length + ' Warnung' + (warnings.warnings.length == 1 ? '' : 'en');
 	
 	// dish out some warnings :)
 //	this.updateDateWarnings();
@@ -846,6 +917,12 @@ SKGB.StegdienstListeWarningList = function (liste) {
 	this.memberWarnings();
 	this.dateWarnings();
 	// supposed to read config (warning penalties etc) from UI, but has them hard-coded at the beginning
+/*
+	// BUG: this sort causes the warnings to have wrong severities; why?
+	this.warnings.sort(function (a, b) {
+		return b.severityAsInt() - a.severityAsInt();
+	});
+*/
 }
 SKGB.StegdienstListeWarningList.prototype.updateWarningsHtml = function () {
 	this.updateMemberWarningsHtml();
@@ -881,7 +958,7 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 			boardMemberCount += 1;
 		}
 	}
-	
+	 
 	// find the modus
 	// (median would prolly be better here, as modus seems to require a fairly even distribution to achieve the result we want here)
 	var modus = 0;
@@ -1063,7 +1140,7 @@ SKGB.StegdienstListeWarningList.prototype.updateDateWarningsHtml = function () {
 		warningNode.innerHTML = statisticsHtml;
 	}
 	$('IMG.warninglink').click(function () {
-		$('#tabs').tabs('select', 5);
+		$('#tabs').tabs('select', 2);
 	});
 	
 	// other warnings (if any)
@@ -1126,13 +1203,19 @@ SKGB.StegdienstListeWarning.prototype.asHtml = function () {
 	}
 	throw 'unknown warning class';
 }
+SKGB.StegdienstListeWarning.prototype.severityAsString = function () {
+	return this.severity == 'error' ? '*FEHLER*' : this.severity == 'check' ? 'Warnung' : this.severity == 'note' ? 'Hinweis' : this.severity;
+}
+SKGB.StegdienstListeWarning.prototype.severityAsInt = function () {
+	return this.severity == 'error' ? 3 : this.severity == 'check' ? 2 : this.severity == 'note' ? 1 : 0;
+}
 
 SKGB.StegdienstListeMemberWarning = function (options) {
 	this.init(options);
 }
 SKGB.StegdienstListeMemberWarning.prototype = new SKGB.StegdienstListeWarning();
 SKGB.StegdienstListeMemberWarning.prototype.asString = function () {
-	return this.severity + ': ' + this.member.name + ': ist ' + this.text;
+	return this.severityAsString() + ': ' + this.member.name + ': ist ' + this.text;
 }
 SKGB.StegdienstListeDateWarning = function (options) {
 	this.init(options);
@@ -1144,5 +1227,5 @@ SKGB.StegdienstListeDateWarning.prototype.asString = function () {
 	if (this.member) {
 		info += ' / ' + this.member.name;
 	}
-	return this.severity + ': ' + info + ': ' + this.text;
+	return this.severityAsString() + ': ' + info + ': ' + this.text;
 }
