@@ -240,6 +240,7 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 			// prevent board members from being assigned multiple times
 			// BUG: infinite loop if all members are board members
 			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
+			/* // DEBUG: --> also hard-code new members to avoid this year because only exactly one of them would have to do three stegdienste => perceptible imbalance */
 			while (membersShuffled[j].board || (i >= membersShuffled.length * 2 - 5 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
 				j++;
 				if (j >= membersShuffled.length) {
