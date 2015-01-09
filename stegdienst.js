@@ -251,9 +251,11 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 		memberAssignees[i] = membersShuffled[j];
 		j++;
 	}
-//	fisherYatesShuffle( memberAssignees );
-	// the problem here is that leaving out the second shuffle automatically makes the resulting list more or less usable; it's less random but this lack of randomness makes it more likely other requirements (that aren't yet implemented) are met
-	// however, an undesired side effect is that board members are only assigned to some random dates early in the year
+	if (! smart) {
+		// the problem here is that leaving out the second shuffle automatically makes the resulting list more or less usable; it's less random but this lack of randomness makes it more likely other requirements (that aren't yet implemented) are met
+		// however, an undesired side effect is that board members are only assigned to some random dates early in the year
+		fisherYatesShuffle( memberAssignees );
+	}
 	
 	var assigneeIndex = 0;
 	for (var dateIndex = 0; dateIndex < dates.length; dateIndex++) {
