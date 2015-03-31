@@ -1103,6 +1103,7 @@ SKGB.StegdienstListeWarningList.prototype.updateMemberWarningsHtml = function ()
 		var warningText = undefined;
 		// besser indizieren?
 		var statisticsHtml = '' + member.count + ' <IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
+		var highestSeverity = 0;
 		for (var j = 0; j < this.warnings.length; j++) {
 			if (! this.warnings[j] instanceof SKGB.StegdienstListeMemberWarning) {
 				continue;
@@ -1110,7 +1111,11 @@ SKGB.StegdienstListeWarningList.prototype.updateMemberWarningsHtml = function ()
 			if (this.warnings[j].member != member) {
 				continue;
 			}
-			statisticsHtml = '' + this.warnings[j].member.count + ' ' + this.warnings[j].asHtml();
+			var severity = this.warnings[j].severityAsInt();
+			if (severity >= highestSeverity) {
+				statisticsHtml = '' + this.warnings[j].member.count + ' ' + this.warnings[j].asHtml();
+				highestSeverity = severity;
+			}
 		}
 		countNode.innerHTML = statisticsHtml;
 	}
@@ -1131,6 +1136,7 @@ SKGB.StegdienstListeWarningList.prototype.updateDateWarningsHtml = function () {
 		var warningText = '';
 		
 		var statisticsHtml = '<IMG SRC="icons/warning-ok.png" WIDTH=16 HEIGHT=16 ALT="">';
+		var highestSeverity = 0;  // not sure if we need this for the Date warnings
 		for (var j = 0; j < this.warnings.length; j++) {
 			if (! this.warnings[j] instanceof SKGB.StegdienstListeDateWarning) {
 				continue;
@@ -1138,7 +1144,11 @@ SKGB.StegdienstListeWarningList.prototype.updateDateWarningsHtml = function () {
 			if (this.warnings[j].dateIndex != i) {
 				continue;
 			}
-			statisticsHtml = this.warnings[j].asHtml();
+			var severity = this.warnings[j].severityAsInt();
+			if (severity >= highestSeverity) {
+				statisticsHtml = this.warnings[j].asHtml();
+				highestSeverity = severity;
+			}
 		}
 		warningNode.innerHTML = statisticsHtml;
 	}
