@@ -7,8 +7,8 @@ if (! window.SKGB) { window.SKGB = {}; }
 
 window.config = {
 	markWeekDay: 3,  // Wednesday
-	summerStart: {month: 2, day: 14+7}, // March 2015
-	summerEnd: {month: 9, day: 31-7}  // October 2015
+	summerStart: {month: 2, day: 19+7}, // March 2016
+	summerEnd: {month: 9, day: 29-7}  // October 2016
 };
 
 // onload:
@@ -46,6 +46,18 @@ $(function(){
 		SKGB.stegdienstListe = new SKGB.StegdienstListe();
 		SKGB.stegdienstListe.members = params.members;
 		SKGB.stegdienstListe.setDateRange(dates);
+		var boardMemberCount = 0;
+		var exemptMemberCount = 0;
+		for (var i = 0; i < params.members.length; i++) {
+			if (params.members[i].board) { boardMemberCount += 1; }
+			if (params.members[i].exempt) { exemptMemberCount += 1; }
+		}
+		var idealModus = Math.max(1, 1 + Math.round(( dates.length * 2 - (params.members.length - exemptMemberCount - boardMemberCount) ) / ( params.members.length - exemptMemberCount )));
+		for (var i = 0; i < params.members.length; i++) {
+			if (params.members[i].board) { params.members[i].idealCount = idealModus - 1; }
+			else if (params.members[i].exempt) { params.members[i].idealCount = 0; }
+			else { params.members[i].idealCount = idealModus; }
+		}
 		SKGB.stegdienstController.liste = SKGB.stegdienstListe;
 		
 		SKGB.stegdienstController.generatePrototypes();
@@ -230,19 +242,27 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 	var membersShuffled = members.slice();
 	fisherYatesShuffle( membersShuffled );
 	
+	// :TODO: recode this, basing it upon the individual member's new .idealCount property
+	
 	var memberAssignees = new Array( dates.length * membersPerDate );
 	var j = 0;
 	for (var i = 0; i < memberAssignees.length; i++) {
 		if (j >= membersShuffled.length) {
 			j = 0;  
 		}
-		if (smart && i >= membersShuffled.length) {
+		while (smart && membersShuffled[j].exempt) {
+			j++;  // skip this particular member
+			if (j >= membersShuffled.length) {
+				j = 0;  
+			}
+		}
+		if (smart && i >= (membersShuffled.length - 1 /*exempt*/) * 1) {  // NB: change both of these to *2
 			// prevent board members from being assigned multiple times
 			// BUG: infinite loop if all members are board members
 			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
-			/* // DEBUG: --> also hard-code new members to avoid this year because only exactly one of them would have to do three stegdienste => perceptible imbalance */
-			while (membersShuffled[j].board || (i >= membersShuffled.length * 2 - 5 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
-				j++;
+			/* // DEBUG: --> also hard-code new members to avoid 3 stegdienste this year */
+			while (membersShuffled[j].board || membersShuffled[j].exempt || (i >= membersShuffled.length * 2 - 5 /*board*/ * 1 - 1 /*exempt*/ * 2 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
+				j++;  // skip this particular member
 				if (j >= membersShuffled.length) {
 					j = 0;  
 				}
@@ -584,7 +604,7 @@ SKGB.StegdienstListeInterface.prototype.formatDate = function (date) {
 SKGB.StegdienstListeInterface.prototype.createDraggableHtmlMemberElement = function (memberObject, dragMode) {
 	
 	var nahFern = memberObject.member.remote ? '<SPAN CLASS="fern">F</SPAN> ' : '<SPAN CLASS="nah">N</SPAN> ';
-	var vorstand = memberObject.member.board ? ' <SPAN CLASS="vorstand">V</SPAN>' : '';
+	var vorstand = memberObject.member.board ? ' <SPAN CLASS="vorstand">V</SPAN>' : memberObject.member.exempt ? ' <SPAN CLASS="befreit">B</SPAN>' : '';
 	
 	memberObject.domNode.innerHTML = '<DIV CLASS="ui-state-default ui-corner-all">' + nahFern + memberObject.member.name + vorstand + '<INPUT TYPE="hidden" NAME="id" VALUE="' + memberObject.member.id + '"></DIV>';
 	var div = $(memberObject.domNode).find('DIV')[0];
@@ -647,7 +667,7 @@ SKGB.StegdienstListeInterface.prototype.dataHasChanged = function () {
 	var warnings = new SKGB.StegdienstListeWarningList(this.liste);
 //	this.warnings = warnings;  // debug
 	warnings.updateWarningsHtml();
-	this.ui.warningsArea.innerHTML = 'score: ' + warnings.score() + '\n\n' + warnings.asText();
+	this.ui.warningsArea.innerHTML = '<P>' + warnings.asHtml() + '\n\n<P><EM>score: ' + warnings.score() + '</EM>';
 	$('#scorebutton')[0].value = warnings.displayScore();
 	$('#warningsbutton')[0].value = warnings.warnings.length + ' Warnung' + (warnings.warnings.length == 1 ? '' : 'en');
 	
@@ -945,10 +965,23 @@ SKGB.StegdienstListeWarningList.prototype.asText = function () {
 	return text;
 }
 
+// method to write warnings to warning list
+SKGB.StegdienstListeWarningList.prototype.asHtml = function () {
+	var text = '';
+	for (var i = 0; i < this.warnings.length; i++) {
+		text += this.warnings[i].asHtml();
+		text += this.warnings[i].severityAsInt() >= 2 ? ' <STRONG>' : ' ';
+		text += this.warnings[i].asString();
+		text += this.warnings[i].severityAsInt() >= 2 ? '</STRONG>\n<BR>' : '\n<BR>';
+	}
+	return text;
+}
+
 SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 	// calculate statistics
 	var countFrequency = [0];
 	var boardMemberCount = 0;
+	var exemptMemberCount = 0;
 	for (var i = 0; i < this.liste.members.length; i++) {
 		var count = this.liste.members[i].count;
 		if (countFrequency[count]) {
@@ -960,10 +993,13 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 		if (this.liste.members[i].board) {
 			boardMemberCount += 1;
 		}
+		if (this.liste.members[i].exempt) {
+			exemptMemberCount += 1;
+		}
 	}
 	 
 	// find the modus
-	// (median would prolly be better here, as modus seems to require a fairly even distribution to achieve the result we want here)
+	// (median would perhaps be better here, as modus seems to require a fairly even distribution to achieve the result we want here)
 	var modus = 0;
 	for (var i = 0; i < countFrequency.length; i++) {
 		if (typeof countFrequency[i] === 'undefined') { continue; }
@@ -973,10 +1009,9 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 		}
 	}
 	
-	var idealCount = modus;
-	var memberCountWithoutBoard = this.liste.members.length - boardMemberCount;
-	var dateItemCount = this.liste.data.length * 2;
-	var expectedMaxCount = Math.ceil( dateItemCount / memberCountWithoutBoard );
+//	var memberCountWithoutBoard = this.liste.members.length - boardMemberCount - exemptMemberCount;
+//	var dateItemCount = this.liste.data.length * 2;
+//	var expectedMaxCount = Math.ceil( dateItemCount / memberCountWithoutBoard );
 	
 	// warnings and member statistics
 	for (var i = 0; i < this.liste.members.length; i++) {
@@ -984,45 +1019,45 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 		var countNode = $('#countNode' + member.id)[0];
 		if (! countNode) { continue; }  // why???????????????
 		
-		if (member.count > idealCount) {
-			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
-				severity: 'note',
-				text: 'öfter eingeteilt als andere',
-				member: member
-			}) );
-		}
-		if (! member.board && member.count < idealCount) {
-			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
-				severity: 'note',
-				text: 'seltener eingeteilt als andere',
-				member: member
-			}) );
-		}
-		if (member.count == 0) {
+		if (member.count == 0 && ! member.exempt) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
 				severity: 'check',
 				text: 'nirgends eingeteilt',
 				member: member
 			}) );
 		}
-		if (member.board && member.count > 1) {
+		else if (member.count < modus && ! member.exempt && (! member.board || member.count < member.idealCount)) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'note',
+				text: 'seltener eingeteilt als andere',
+				member: member
+			}) );
+		}
+		if (member.count > member.idealCount + 1) {
+			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
+				severity: 'error',
+				text: (member.board ? 'Vorstandsmitglied und ' : member.exempt ? 'befreit und ' : '') + 'zu oft eingeteilt',
+				member: member
+			}) );
+		}
+		else if (member.exempt && member.count > 0) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
 				severity: 'check',
-				text: 'Vorstandsmitglied und sollte nur einmal eingeteilt werden',
+				text: 'befreit und sollte nicht eingeteilt werden',
 				member: member
 			}) );
 		}
-		if (member.count > expectedMaxCount) {
+		else if (member.count > member.idealCount && member.board) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
-				severity: 'error',
-				text: 'zu oft eingeteilt',
+				severity: 'check',
+				text: 'Vorstandsmitglied und sollte nur ' + member.idealCount + 'mal eingeteilt werden',
 				member: member
 			}) );
 		}
-		if (member.board && member.count > expectedMaxCount - 1) {
+		else if (member.count > modus) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
-				severity: 'error',
-				text: 'Vorstandsmitglied und zu oft eingeteilt',
+				severity: 'note',
+				text: 'öfter eingeteilt als andere',
 				member: member
 			}) );
 		}
@@ -1217,7 +1252,7 @@ SKGB.StegdienstListeWarning.prototype.asHtml = function () {
 	throw 'unknown warning class';
 }
 SKGB.StegdienstListeWarning.prototype.severityAsString = function () {
-	return this.severity == 'error' ? '*FEHLER*' : this.severity == 'check' ? 'Warnung' : this.severity == 'note' ? 'Hinweis' : this.severity;
+	return this.severity == 'error' ? 'FEHLER' : this.severity == 'check' ? 'Warnung' : this.severity == 'note' ? 'Hinweis' : this.severity;
 }
 SKGB.StegdienstListeWarning.prototype.severityAsInt = function () {
 	return this.severity == 'error' ? 3 : this.severity == 'check' ? 2 : this.severity == 'note' ? 1 : 0;

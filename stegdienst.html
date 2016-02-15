@@ -108,7 +108,7 @@ UL#members-list, UL#members-list>LI {
 .ui-draggable.animated {
 	z-index: 9 !important;
 }
-SPAN.fern, SPAN.nah, SPAN.vorstand {
+SPAN.fern, SPAN.nah, SPAN.vorstand, SPAN.befreit {
 	font-size: 60%;
 	font-weight: bold;
 	vertical-align: 2px;
@@ -268,8 +268,9 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <DIV ID="tabs-6">
 
 <H2 style="display:none">Warnungen</H2>
-<TEXTAREA COLS="120" ROWS="25" ID="warningsarea" READONLY>
-</TEXTAREA>
+<P><EM>Warnungen werden auch als Tooltip auf den Warnsymbolen angezeigt.</EM>
+<DIV ID="warningsarea">
+</DIV>
 
 </DIV>
 </DIV>
@@ -279,7 +280,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <TEXTAREA COLS="120" ROWS="20" ID="initdata" READONLY STYLE="display: none;">
 {
 members: [
-{ id: 1, name: 'Adam Alfa', remote: false, board: true },
+{ id: 1, name: 'Adam Alfa', remote: false, board: false, exempt: true },
 { id: 2, name: 'Britta Bravo', remote: true, board: false },
 { id: 3, name: 'Christa Charlie', remote: true, board: false },
 { id: 4, name: 'Dieter Delta', remote: true, board: false },
