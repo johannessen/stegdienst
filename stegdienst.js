@@ -68,6 +68,7 @@ $(function(){
 		SKGB.stegdienstController.dataHasChanged();
 		$('.overwrite-warning').toggleClass('active', true);  // hide warning until there is something that would be overwritten
 		$('form[name="liste-form"]')[0].innerHTML = '';  // only show button until list is populated for the first time; the button helps users to get started, its hiding prevents accidental erasures or the users not finding the strategies pane
+		$('#printbutton')[0].disabled = false;
 	}
 	
 	// set up UI
@@ -99,7 +100,7 @@ $(function(){
 	$('.generate-suggestion-button').click(function () {
 		var importChecked = $('#strategy input[name="strategy"][value="import"]')[0].checked;
 		if (importChecked) {
-			$('#tabs').tabs('select', 5);
+			$('#tabs').tabs('select', 6);
 			return;
 		}
 		reset();
@@ -115,6 +116,9 @@ $(function(){
 		newData();
 	});
 	$('#import-form input[name="import"]')[0].disabled = false;
+	$('#printbutton').click(function () {
+		SKGB.print();
+	});
 	
 // :DEBUG:
 //	$('#tabs').tabs('select', 1);
@@ -520,7 +524,7 @@ SKGB.StegdienstListeInterface.prototype.createStegdienstDom = function (dates) {
 	var data = this.liste.data;
 	
 	// add suggestions to UI table
-	var date = dates.start;
+	var date = new Date(dates.start);
 	for (var i = 0; i < this.liste.data.length; i++) {
 		this.createDomTableRowNodes(this.liste.data[i], this.formatDate(date));
 		date.setDate(date.getDate() + 7);
@@ -909,6 +913,21 @@ SKGB.StegdienstListeDrop.prototype.notifyDelegate = function (references) {
 	
 	// at this point the internal business model state is (assumed to be) updated
 	this.controller.dataHasChanged();
+}
+
+
+
+// ====================================================
+
+SKGB.print = function () {
+	var stegdienst = SKGB.stegdienstController;
+	var firstDate = stegdienst.formatDate(stegdienst.liste.firstDate);
+	var data = stegdienst.ui.exportData.innerHTML;
+//	var dataEncoded = btoa(unescape(encodeURIComponent(data)));
+	var dataEncoded = btoa(data);
+//	dataEncoded = encodeURIComponent(dataEncoded.replace(/\//g, '_').replace(/\+/g, '-').replace(/=/g, ''));  // RFC4648
+	dataEncoded = encodeURIComponent(dataEncoded);
+	location.href="cgi-bin/stegdienst.cgi?start="+firstDate+"&liste="+dataEncoded;
 }
 
 
