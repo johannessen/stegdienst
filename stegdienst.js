@@ -52,10 +52,10 @@ $(function(){
 			if (params.members[i].board) { boardMemberCount += 1; }
 			if (params.members[i].exempt) { exemptMemberCount += 1; }
 		}
-		var idealModus = Math.max(1, 1 + Math.round(( dates.length * 2 - (params.members.length - exemptMemberCount - boardMemberCount) ) / ( params.members.length - exemptMemberCount )));
+		var idealModus = Math.max(1, 1 + Math.round(( dates.length * 2 - (params.members.length - exemptMemberCount /*- boardMemberCount*/) ) / ( params.members.length - exemptMemberCount )));
 		for (var i = 0; i < params.members.length; i++) {
-			if (params.members[i].board) { params.members[i].idealCount = idealModus - 1; }
-			else if (params.members[i].exempt) { params.members[i].idealCount = 0; }
+			/*if (params.members[i].board) { params.members[i].idealCount = idealModus - 1; }
+			else*/ if (params.members[i].exempt) { params.members[i].idealCount = 0; }
 			else { params.members[i].idealCount = idealModus; }
 		}
 		SKGB.stegdienstController.liste = SKGB.stegdienstListe;
@@ -265,7 +265,7 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 			// BUG: infinite loop if all members are board members
 			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
 			/* // DEBUG: --> also hard-code new members to avoid 3 stegdienste this year */
-			while (membersShuffled[j].board || membersShuffled[j].exempt || (i >= membersShuffled.length * 2 - 5 /*board*/ * 1 - 1 /*exempt*/ * 2 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
+			while (/*membersShuffled[j].board ||*/ membersShuffled[j].exempt || (i >= membersShuffled.length * 2 /*- 5*/ /*board*/ * 1 - 1 /*exempt*/ * 2 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
 				j++;  // skip this particular member
 				if (j >= membersShuffled.length) {
 					j = 0;  
@@ -1066,6 +1066,7 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 				member: member
 			}) );
 		}
+/*
 		else if (member.count > member.idealCount && member.board) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
 				severity: 'check',
@@ -1073,6 +1074,7 @@ SKGB.StegdienstListeWarningList.prototype.memberWarnings = function () {
 				member: member
 			}) );
 		}
+*/
 		else if (member.count > modus) {
 			this.warnings.push( new SKGB.StegdienstListeMemberWarning({
 				severity: 'note',
