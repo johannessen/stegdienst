@@ -1,153 +1,25 @@
 <!DOCTYPE html>
-<html lang=de><meta charset=UTF-8>
-<META NAME="author" CONTENT="Arne Johannessen">
-<LINK REV="made" HREF="mailto:webmaster&#64;intern.skgb.de">
-<TITLE>SKGB-intern: Vorstandsbereich (Stegdienstliste erzeugen)</TITLE>
-<STYLE TYPE="text/css">
-@import url("intern1.css");
-</STYLE>
+<meta charset=UTF-8>
+<title>Stegdienstliste erzeugen (SKGB-intern 2)</title>
+<style>@import url("intern1.css?a12");@import url(stegdienst.css);</style>
+<body id=intern-skgb-de style=margin-left:.9em>
+<div id=head><h1><a>SKGB<em>-intern 2</em> Preview</a></h1></div>
 
-<STYLE TYPE="text/css">
-@import url("jquery-ui-1.8.23.custom/development-bundle/themes/base/jquery.ui.all.css");
-META {  /* pre-load and cache dragging cursor; Safari 5.1.7 seems to need this */
-	cursor: url(icons/closedhand.cur), pointer;
-}
-.ui-draggable {
-	cursor: url(icons/openhand.cur), pointer;
-}
-.ui-draggable-dragging {
-	cursor: url(icons/closedhand.cur), pointer;
-	box-shadow: 0 0 10px 0px rgba(0,0,0,.8);
-	background-color: #dadada !important;
-	background-image: url(jquery-ui-1.8.23.custom/development-bundle/themes/base/images/ui-bg_glass_75_dadada_1x400.png) !important;
-	border-color: #dadada !important;
-	z-index: 10 !important;
-}
-.ui-widget {
-	font: .91em "Trebuchet MS", Arial, sans-serif;
-}
-.ui-tabs-panel {
-	min-height: 30em;
-}
-/*
-body {
-	font-size: 85%;
-}
-.ui-state-hover {
-	background: red !important;
-}
-TEXTAREA#initdata {
-	font: .6em "Monaco", "Courier", monospaced;
-	width: 100%;
-}
-TD.member {
-	background: silver;
-}
-TD.member>DIV {
-	background: white;
-}
-*/
+<strong>Stegdienstliste erzeugen</strong>
 
-H2, .strategy-options {
-	margin-bottom: 1.5em;
-}
-.strategy-options {
-	margin-left: 2.5em;
-}
-.ui-tabs-panel A {
-	color: blue;
-}
-LABEL {
-	margin-right: 1.2em;
-}
 
-#statistics .count {
-	position: absolute;
-}
-#statistics .count + * {
-	margin-left: 2.5em;
-}
-#stegdienst TH {
-	font-size: 87%;
-	padding-bottom: 1em;
-}
-#stegdienst TD:first-child, #stegdienst TD:first-child + TD {
-	padding-right: .6em;
-}
-#tabs-2 .ui-draggable {  /* Listen-Tab */
-	padding: 0 .3em;
-	min-width: 12em;
-}
-#stegdienst TD.member {
-	min-width: 12em;
-}
-#stegdienst TD.warning {
-	height: 1.33em; /* keeps empty rows approximately the same height als those with assigned members in it */
-}
-#stegdienst .warning IMG {
-	vertical-align: -18%;
-}
-TABLE#stegdienst, #statistics {
-	display: table-cell;
-}
-#statistics {
-	padding-left: 2.5em;
-}
-#statistics #members-list {
-	padding-bottom: 128px;
-	background-image: url(icons/trash.png);
-	background-repeat: no-repeat;
-	background-position: center bottom;
-}
-UL#members-list, UL#members-list>LI {
-	list-style-type: none;
-	display: block;
-	padding-left: 0;
-	margin-top: 2px;
-}
-.ui-draggable.animated {
-	z-index: 9 !important;
-}
-SPAN.fern, SPAN.nah, SPAN.vorstand, SPAN.befreit {
-	font-size: 60%;
-	font-weight: bold;
-	vertical-align: 2px;
-}
-.activeMember {
-	color: black !important;
-	background-color: #bbb !important;
-	background-image: url(icons/ui-bg_glass_75_adadad_1x400.png) !important;
-}
-LABEL.not-implemented, .strategy-options .not-implemented {
-	color: grey;
-}
-.overwrite-warning {
-	display: none;
-}
-.overwrite-warning.active {
-	display: block;
-}
-</STYLE>
-	
+
 <SCRIPT SRC="jquery-ui-1.8.23.custom/jquery-1.8.1.js"></SCRIPT>
 <SCRIPT SRC="jquery-ui-1.8.23.custom/js/jquery-ui-1.8.23.custom.min.js"></SCRIPT>
 <!--SCRIPT SRC="jquery-ui-1.8.23.custom/development-bundle/ui/jquery-ui-1.8.23.custom.js"></SCRIPT-->
 <!--SCRIPT>window.userIsBoardMember = true;</SCRIPT-->
 <SCRIPT SRC="stegdienst.js"></SCRIPT>
-	
-<LINK REL="icon" HREF="/icon.png" TYPE="image/png">
 
 
-<body>
-	<DIV CLASS="hide">Zum <A HREF="#menu" ACCESSKEY="2">Menü</A> springen.</DIV>
-	<DIV ID="head"><H1>SKGB<EM>-intern</EM> <STRONG>Vorstandsbereich</STRONG></H1></DIV>
 
-<P STYLE="position: absolute; margin-left: 10em">Score = <!--INPUT TYPE=button CLASS=generate-suggestion-button ID=scorebutton VALUE="-∞" TITLE="klicken, um neuen Vorschlag zu generieren"--><INPUT TYPE=button CLASS=generate-suggestion-button ID=scorebutton VALUE="-∞" DISABLED>     <INPUT TYPE=button ID=warningsbutton VALUE="Warnungen" onclick="$('#tabs').tabs('select', 2)">
+<P>Score = <!--INPUT TYPE=button CLASS=generate-suggestion-button ID=scorebutton VALUE="-∞" TITLE="klicken, um neuen Vorschlag zu generieren"--><INPUT TYPE=button CLASS=generate-suggestion-button ID=scorebutton VALUE="-∞" DISABLED>     <INPUT TYPE=button ID=warningsbutton VALUE="Warnungen" onclick="$('#tabs').tabs('select', 2)">
 
 
-<DIV ID="menu"><UL>
-	<LI><A HREF="/digest/vorstand/">zurück zum Menü</A></LI>
-</UL><HR></DIV>
 
 <!-- Strategie (inkl. Import) | Parameter/Einstellungen | Liste+Warnungen | Export -->
 <DIV ID="tabs">
@@ -176,7 +48,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>unverändert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2016">2016</OPTION><OPTION VALUE="2015">2015</OPTION><OPTION VALUE="2014">2014</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2011">2011</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
+	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2016" DISABLED>2016</OPTION><OPTION VALUE="2015" DISABLED>2015</OPTION><OPTION VALUE="2014" DISABLED>2014</OPTION><OPTION VALUE="2013" DISABLED>2013</OPTION><OPTION VALUE="2012" DISABLED>2012</OPTION><OPTION VALUE="2011" DISABLED>2011</OPTION><OPTION VALUE="2010" DISABLED>2010</OPTION><OPTION VALUE="2009" DISABLED>2009</OPTION></SELECT></LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
@@ -345,33 +217,30 @@ Pippa Papa	Martina Mike
 Oskar Oscar	Julie Juliett
 Ingmar India	Adam Alfa
 </TEXTAREA>
-<!-- 2016: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2016" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2015: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2015" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2014: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2014" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2013: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2013" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2012: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2012" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2011: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2011" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2010: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2010" READONLY STYLE="display: none;">
 </TEXTAREA>
-<!-- 2009: keine Daten im Repository (Datenschutz) -->
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2009" READONLY STYLE="display: none;">
 </TEXTAREA>
 
 
 
-	
-	<P ID="foot"><BR> $Id$ <BR></P>
-</BODY></HTML>
+<P><BR> $Id$ <BR></P>
+
+
+<div id=foot>
+<p>Version 2.0.0-a14
+<br>2016-12-14
+<br>&nbsp;
+</div>
