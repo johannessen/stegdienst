@@ -2,7 +2,7 @@
 <html lang=de><meta charset=UTF-8>
 <META NAME="author" CONTENT="Arne Johannessen">
 <LINK REV="made" HREF="mailto:webmaster&#64;intern.skgb.de">
-<TITLE>SKGB-intern: Vorstandsbereich</TITLE>
+<TITLE>SKGB-intern: Vorstandsbereich (Stegdienstliste erzeugen)</TITLE>
 <STYLE TYPE="text/css">
 @import url("intern1.css");
 </STYLE>
@@ -26,13 +26,13 @@ META {  /* pre-load and cache dragging cursor; Safari 5.1.7 seems to need this *
 .ui-widget {
 	font: .91em "Trebuchet MS", Arial, sans-serif;
 }
-body {
-	font-size: 85%;
-}
 .ui-tabs-panel {
 	min-height: 30em;
 }
 /*
+body {
+	font-size: 85%;
+}
 .ui-state-hover {
 	background: red !important;
 }
@@ -132,6 +132,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <SCRIPT SRC="jquery-ui-1.8.23.custom/jquery-1.8.1.js"></SCRIPT>
 <SCRIPT SRC="jquery-ui-1.8.23.custom/js/jquery-ui-1.8.23.custom.min.js"></SCRIPT>
 <!--SCRIPT SRC="jquery-ui-1.8.23.custom/development-bundle/ui/jquery-ui-1.8.23.custom.js"></SCRIPT-->
+<!--SCRIPT>window.userIsBoardMember = true;</SCRIPT-->
 <SCRIPT SRC="stegdienst.js"></SCRIPT>
 	
 <LINK REL="icon" HREF="/icon.png" TYPE="image/png">
@@ -175,11 +176,11 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>unverändert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2016">2016</OPTION><OPTION VALUE="2015">2015</OPTION><OPTION VALUE="2014">2014</OPTION><!--OPTION VALUE="2014-draft">2014 Entwurf</OPTION--><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2011">2011</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
+	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2016">2016</OPTION><OPTION VALUE="2015">2015</OPTION><OPTION VALUE="2014">2014</OPTION><OPTION VALUE="2013">2013</OPTION><OPTION VALUE="2012">2012</OPTION><OPTION VALUE="2011">2011</OPTION><OPTION VALUE="2010">2010</OPTION><OPTION VALUE="2009">2009</OPTION></SELECT></LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="id" CHECKED> nach interner Datenbank-ID</LABEL>
+	<P><LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="id" CHECKED> nach ungefährem Eintrittsdatum</LABEL>
 	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname"> nach Name</LABEL>
 	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="lastname"> nach Nachname</LABEL>
 	<P><LABEL><INPUT TYPE="checkbox" NAME="descending" VALUE="yes"> absteigend</LABEL>
@@ -235,7 +236,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <DIV ID="tabs-4">
 
 <H2 style="display:none">Export</H2>
-<P>Die bearbeitete Liste kann zur Veröffentlichung hier per Copy+Paste in eine Textverarbeitung wie Word <!--(oder RagTime)--> oder in eine Layout-Software wie InDesign <!--(oder RagTime)--> oder in eine Tabellenkalkulation wie Excel <!--(oder RagTime)--> übernommen werden. Die Daten in diesem Feld passen sich laufend automatisch dem momentanen Bearbeitungsstand der Stegdienstliste an.
+<P>Die bearbeitete Liste kann zur Veröffentlichung hier per Copy+Paste in eine Textverarbeitung wie Word oder in eine Layout-Software wie InDesign oder in eine Tabellenkalkulation wie Excel übernommen werden. Die Daten in diesem Feld passen sich laufend automatisch dem momentanen Bearbeitungsstand der Stegdienstliste an.
 </P>
 <TEXTAREA COLS="75" ROWS="10" ID="exportdata" READONLY>
 </TEXTAREA>
@@ -253,7 +254,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <LI>öfter/seltener als Modus = –0.5 score penalty
 <LI>unangemessen oft = –10.0 score penalty
 <LI>freigestellt = –5.0 score penalty
-<LI>Vorstand mehrfach = –5.0 score penalty
+<LI><DEL>Vorstand mehrfach = –5.0 score penalty</DEL>
 <LI>Doppelzuteilung = –10.0 score penalty
 <LI>Unterzuteilung = –10.0 score penalty
 <LI>Nebenzuteilung = –5.0 score penalty
@@ -262,7 +263,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <P style="margin-top: 2em">mehr Informationen:
 <UL>
 <LI><P><A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Algorithmus">Wikipedia zur Monte-Carlo–Methodik</A>
-<LI><P><A HREF="../gs-verein/">Hintergründe zur Motivation für SKGB-intern 2.0</A>
+<LI><P><A HREF="http://intern.skgb.de/digest/vorstand/gs-verein/">Hintergründe zur Motivation für SKGB-intern 2.0</A> (im alten Vorstandsbereich)
 </UL>
 
 </DIV>
@@ -277,7 +278,7 @@ LABEL.not-implemented, .strategy-options .not-implemented {
 <DIV ID="tabs-7">
 
 <H2 style="display:none">Druck</H2>
-<P>Die bearbeitete Liste kann hier im LibreOffice-Format zur Veröffentlichung heruntergeladen werden.
+<P>Vorstandsmitglieder können hier die bearbeitete Liste im LibreOffice-Format zur Veröffentlichung herunterladen.
 <P><INPUT TYPE=button ID=printbutton VALUE="ODF laden" onclick="SKGB.print()" DISABLED>
 <P STYLE="margin-top:1.5em">Die freie <STRONG>Schriftart <A HREF="http://savannah.gnu.org/projects/freefont/">FreeSerif</A></STRONG> wird <STRONG>benötigt,</STRONG> um das einheitliche Erscheinungsbild in der Vereinskommunikation zu fördern.
 <P>Empfohlen ist die FreeFont-Version 2012 oder neuer. Es sollte alle vier Schnitte von Free<B>Serif</B> installiert werden; die anderen beiden enthaltenen Schriftarten FreeMono und FreeSans werden nicht benötigt. Direktlinks zum Download vom GNU-Server:

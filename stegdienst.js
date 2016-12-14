@@ -7,8 +7,8 @@ if (! window.SKGB) { window.SKGB = {}; }
 
 window.config = {
 	markWeekDay: 3,  // Wednesday
-	summerStart: {month: 2, day: 19+7}, // March 2016
-	summerEnd: {month: 9, day: 29-7}  // October 2016
+	summerStart: {month: 2, day: 18+7}, // March 2017
+	summerEnd: {month: 9, day: 21-7}  // October 2017
 };
 
 // onload:
@@ -68,7 +68,10 @@ $(function(){
 		SKGB.stegdienstController.dataHasChanged();
 		$('.overwrite-warning').toggleClass('active', true);  // hide warning until there is something that would be overwritten
 		$('form[name="liste-form"]')[0].innerHTML = '';  // only show button until list is populated for the first time; the button helps users to get started, its hiding prevents accidental erasures or the users not finding the strategies pane
-		$('#printbutton')[0].disabled = false;
+		if (window.userIsBoardMember !== false) {
+			// this is not meant to be fool-proof -- evil users can easily re-create something closely resembling the club's letterhead anyway
+			$('#printbutton')[0].disabled = false;
+		}
 	}
 	
 	// set up UI
