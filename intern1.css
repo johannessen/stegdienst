@@ -219,6 +219,9 @@ TH {
 	border-right-color: #f00;
 	font-weight: normal;
 }
+#menu LI STRONG B A, #menu LI STRONG B A:hover {
+	font-weight: bold;
+}
 #menu HR {
 	display: block;
 	margin: 0 0 1px 0;
@@ -315,6 +318,8 @@ DT.odd:before {
 	background: #eee;
 }
 
+/* SKGB-intern 2 adaption below */
+
 a.no-access:after {
 	color: black;
 	font-weight: bold;
@@ -355,4 +360,10 @@ ul.auth del {
 ul.auth code {
 	color: inherit;
 	padding: .12em .5em;
+}
+
+i.bootsname {
+	font-style: normal;
+	text-transform: uppercase;
+	font-size: 93%;
 }
