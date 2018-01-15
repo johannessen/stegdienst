@@ -1,4 +1,3 @@
-
 if (! window.SKGB) { window.SKGB = {}; }
 
 
@@ -7,8 +6,8 @@ if (! window.SKGB) { window.SKGB = {}; }
 
 window.config = {
 	markWeekDay: 3,  // Wednesday
-	summerStart: {month: 2, day: 18+7}, // March 2017
-	summerEnd: {month: 9, day: 21-7}  // October 2017
+	summerStart: {month: 2, day: 17+7}, // March 2018
+	summerEnd: {month: 9, day: 13-7}  // October 2018
 };
 
 // onload:
@@ -263,7 +262,7 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 				j = 0;  
 			}
 		}
-		if (smart && i >= (membersShuffled.length - 1 /*exempt*/) * 1) {  // NB: change both of these to *2
+		if (smart && i >= (membersShuffled.length - 1 /*exempt*/) * 2) {
 			// prevent board members from being assigned multiple times
 			// BUG: infinite loop if all members are board members
 			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
