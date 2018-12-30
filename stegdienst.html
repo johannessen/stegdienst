@@ -50,7 +50,7 @@
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>unverändert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2017" DISABLED>2017</OPTION><OPTION VALUE="2016" DISABLED>2016</OPTION><OPTION VALUE="2015" DISABLED>2015</OPTION><OPTION VALUE="2014" DISABLED>2014</OPTION><OPTION VALUE="2013" DISABLED>2013</OPTION><OPTION VALUE="2012" DISABLED>2012</OPTION><OPTION VALUE="2011" DISABLED>2011</OPTION><OPTION VALUE="2010" DISABLED>2010</OPTION><OPTION VALUE="2009" DISABLED>2009</OPTION></SELECT></LABEL>
+	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2018" DISABLED>2018</OPTION><OPTION VALUE="2017" DISABLED>2017</OPTION><OPTION VALUE="2016" DISABLED>2016</OPTION><OPTION VALUE="2015" DISABLED>2015</OPTION><OPTION VALUE="2014" DISABLED>2014</OPTION><OPTION VALUE="2013" DISABLED>2013</OPTION><OPTION VALUE="2012" DISABLED>2012</OPTION><OPTION VALUE="2011" DISABLED>2011</OPTION><OPTION VALUE="2010" DISABLED>2010</OPTION><OPTION VALUE="2009" DISABLED>2009</OPTION></SELECT></LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
@@ -136,8 +136,9 @@
 <P>Selbstverständlich ist zu erwarten, dass eine finale Version dieser App eine halbwegs benutzerfreundliche Oberfläche und „sensible defaults“ hat anstelle eines solchen kryptischen Zahlenwirrwarrs. (Mal sehen, ob und ggf. wann die Erwartung wahr wird…)
 <P style="margin-top: 2em">mehr Informationen:
 <UL>
-<LI><P><A HREF="http://de.wikipedia.org/wiki/Monte-Carlo-Algorithmus">Wikipedia zur Monte-Carlo–Methodik</A>
-<LI><P><A HREF="http://intern.skgb.de/digest/vorstand/gs-verein/">Hintergründe zur Motivation für SKGB-intern 2.0</A> (im alten Vorstandsbereich)
+<LI><P><A HREF="https://de.wikipedia.org/wiki/Monte-Carlo-Algorithmus">Wikipedia zur Monte-Carlo–Methodik</A>
+<LI><P><A HREF="https://de.wikipedia.org/wiki/Bergsteigeralgorithmus">Wikipedia zur Bergsteiger-Methodik</A> (zur Verbesserung der „zufälligen“ Vorschläge)
+<LI><P><A HREF="https://intern.skgb.de/digest/vorstand/gs-verein/">Hintergründe zur Motivation für SKGB-intern 2.0</A> (im alten Vorstandsbereich)
 </UL>
 
 </DIV>
@@ -154,12 +155,9 @@
 <H2 style="display:none">Druck</H2>
 <P>Vorstandsmitglieder können hier die bearbeitete Liste im LibreOffice-Format zur Veröffentlichung herunterladen.
 <P><INPUT TYPE=button ID=printbutton VALUE="ODF laden" onclick="SKGB.print()" DISABLED>
-<P STYLE="margin-top:1.5em">Die freie <STRONG>Schriftart <A HREF="http://savannah.gnu.org/projects/freefont/">FreeSerif</A></STRONG> wird <STRONG>benötigt,</STRONG> um das einheitliche Erscheinungsbild in der Vereinskommunikation zu fördern.
-<P>Empfohlen ist die FreeFont-Version 2012 oder neuer. Es sollte alle vier Schnitte von Free<B>Serif</B> installiert werden; die anderen beiden enthaltenen Schriftarten FreeMono und FreeSans werden nicht benötigt. Direktlinks zum Download vom GNU-Server:
-<BR><A HREF="http://ftp.gnu.org/gnu/freefont/freefont-ttf-20120503.zip">freefont-ttf-20120503.zip</A> – empfohlen für Windows
-<BR><A HREF="http://ftp.gnu.org/gnu/freefont/freefont-otf-20120503.tar.gz">freefont-otf-20120503.tar.gz</A> – empfohlen für andere Betriebssysteme
-<P STYLE="margin-top:1.5em">Das ausgegebene Dokument <EM>sollte</EM> ein ganz normales unkomprimiertes OpenDocument/ODF-Textdokument sein, das auch in anderer Software funktioniert. In der Praxis werden allerdings von Drittsoftware oftmals nur komprimierte ODF-Dokumente unterstützt und die SVG-Integration funktioniert oft nicht wie erwartet. Deshalb wird nur die Verwendung mit <A HREF="https://de.libreoffice.org/download/libreoffice-fresh/">LibreOffice 5</A> empfohlen.
-<P>(Apache OpenOffice <EM>sollte</EM> ebenfalls bestens funktionieren, ist aber völlig ungetestet und deshalb nicht empfohlen.)
+<P STYLE="margin-top:1.5em">Die freie <STRONG>Schriftart <A HREF="http://savannah.gnu.org/projects/freefont/">FreeSerif</A></STRONG> wird <STRONG>benötigt,</STRONG> um das einheitliche Erscheinungsbild in der Vereinskommunikation zu fördern. Alle vier Schnitte von FreeSerif sollten installiert werden.
+<P>Direktlink zum Download: <A HREF="http://dev.thaw.de/temp/freeserif-20120503-win.zip">freeserif-20120503-win.zip</A>
+<P STYLE="margin-top:1.5em">Das ausgegebene Dokument <EM>sollte</EM> ein ganz normales unkomprimiertes OpenDocument/ODF-Textdokument sein, das auch in anderer Software funktioniert. In der Praxis werden allerdings von Drittsoftware oftmals nur komprimierte ODF-Dokumente unterstützt und die SVG-Integration funktioniert oft nicht wie erwartet. Deshalb wird nur die Verwendung mit <A HREF="https://de.libreoffice.org/download/libreoffice-fresh/">LibreOffice 6</A> empfohlen.
 
 
 </DIV>
@@ -219,6 +217,8 @@ Pippa Papa	Martina Mike
 Oskar Oscar	Julie Juliett
 Ingmar India	Adam Alfa
 </TEXTAREA>
+<TEXTAREA COLS="1" ROWS="1" ID="importdata2018" READONLY STYLE="display: none;">
+</TEXTAREA>
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2017" READONLY STYLE="display: none;">
 </TEXTAREA>
 <TEXTAREA COLS="1" ROWS="1" ID="importdata2016" READONLY STYLE="display: none;">
@@ -244,7 +244,7 @@ Ingmar India	Adam Alfa
 
 
 <div id=foot>
-<p>Version 2.0.0-a28
-<br>2018-01-15
+<p>Version 2.0.0-a30
+<br>2018-12-30
 <br>&nbsp;
 </div>

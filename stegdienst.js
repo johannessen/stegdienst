@@ -6,8 +6,8 @@ if (! window.SKGB) { window.SKGB = {}; }
 
 window.config = {
 	markWeekDay: 3,  // Wednesday
-	summerStart: {month: 2, day: 17+7}, // March 2018
-	summerEnd: {month: 9, day: 13-7}  // October 2018
+	summerStart: {month: 2, day: 16+7}, // March 2019
+	summerEnd: {month: 9, day: 5-7}  // October 2019
 };
 
 // onload:
@@ -245,7 +245,7 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 	// the strategy: shuffle member list (so as to randomise which members have more dates than others)
 	// then assign dates from that list and shuffle again (so as to not have predictable repetition in the Stegdienstliste)
 	
-	var membersShuffled = members.slice();
+	var membersShuffled = members.filter( function(member) { return ! member.exempt; });
 	fisherYatesShuffle( membersShuffled );
 	
 	// :TODO: recode this, basing it upon the individual member's new .idealCount property
@@ -256,18 +256,10 @@ SKGB.StegdienstListe.prototype.generateShuffledSuggestions = function (members, 
 		if (j >= membersShuffled.length) {
 			j = 0;  
 		}
-		while (smart && membersShuffled[j].exempt) {
-			j++;  // skip this particular member
-			if (j >= membersShuffled.length) {
-				j = 0;  
-			}
-		}
-		if (smart && i >= (membersShuffled.length - 1 /*exempt*/) * 2) {
-			// prevent board members from being assigned multiple times
-			// BUG: infinite loop if all members are board members
-			// DEBUG: --> hard-code those who had 3 stegdienste last year to avoid them this year
-			/* // DEBUG: --> also hard-code new members to avoid 3 stegdienste this year */
-			while (/*membersShuffled[j].board ||*/ membersShuffled[j].exempt || (i >= membersShuffled.length * 2 /*- 5*/ /*board*/ * 1 - 1 /*exempt*/ * 2 && (membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16))) {
+		if (smart && i >= membersShuffled.length * 2) {
+			// DEBUG: --> hard-code those who had either 3 stegdienste in the previous year or 3 stegdienste in at least two out of the last three years to avoid them this year
+			// DEBUG: --> also hard-code new members to avoid 3 stegdienste this year
+			while ( membersShuffled[j].id == 3 || membersShuffled[j].id == 15 || membersShuffled[j].id == 16 ) {
 				j++;  // skip this particular member
 				if (j >= membersShuffled.length) {
 					j = 0;  
@@ -686,7 +678,7 @@ SKGB.StegdienstListeInterface.prototype.updateExport = function () {
 	var data = this.liste.data;
 	var a = '';
 	for (var i = 0; i < data.length; i++) {
-		if (data[i].length > 0) {
+		if (data[i] && data[i].length > 0) {
 			if (data[i][0]) {
 				a += data[i][0].name;
 			}
