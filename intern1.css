@@ -1,5 +1,5 @@
 /* SKGB-intern Standard (Screen) Stylesheet
- * Version 1.3a27
+ * Version 1.3a31
  * Absolute/margin positioning edition
  * CSS layer 2
  *
@@ -181,7 +181,7 @@ TH {
 	background-color: #eee;
 	color: #666;
 }
-#menu #menu-up A {
+#menu #menu-up A, #menu .menu-up A {
 	border-left-color: #d00;
 }
 #menu #menu-switch A {
@@ -208,7 +208,7 @@ TH {
 	background-color: #f00;
 	color: #fff;
 }
-#menu UL#menu-up LI A:link:hover, #menu UL#menu-up LI A:visited:hover {
+#menu UL#menu-up LI A:link:hover, #menu UL#menu-up LI A:visited:hover, #menu .menu-up A:hover {
 	border-left-color: #d00;
 	border-right-color: #e00;
 	background-color: #f00;
