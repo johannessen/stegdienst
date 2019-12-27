@@ -50,6 +50,9 @@ H2, .strategy-options {
 LABEL {
 	margin-right: 1.2em;
 }
+LABEL.disabled {
+	color: silver;
+}
 
 #statistics .count {
 	position: absolute;

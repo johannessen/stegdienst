@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <meta charset=UTF-8>
-<meta http-equiv=X-UA-Compatible content="IE=edge">
 <title>Stegdienstliste erzeugen (SKGB-intern 2)</title>
 <style>
 @import url("lib/intern1.css");
@@ -15,9 +14,9 @@
 
 <SCRIPT SRC="lib/jquery-ui-1.8.23.custom/jquery-1.8.1.js"></SCRIPT>
 <SCRIPT SRC="lib/jquery-ui-1.8.23.custom/js/jquery-ui-1.8.23.custom.min.js"></SCRIPT>
-<!-- userIsBoardMember: this is not meant to be fool-proof -->
-<!--SCRIPT>window.userIsBoardMember = true;</SCRIPT-->
 <SCRIPT SRC="lib/stegdienst.js"></SCRIPT>
+<SCRIPT SRC="lib/demo-data.js"></SCRIPT>
+<SCRIPT SRC="stegdienst-data.js"></SCRIPT>
 
 
 
@@ -52,12 +51,12 @@
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="base"> <STRONG>unverändert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"><OPTION VALUE="test" SELECTED>Test</OPTION><OPTION VALUE="2018" DISABLED>2018</OPTION><OPTION VALUE="2017" DISABLED>2017</OPTION><OPTION VALUE="2016" DISABLED>2016</OPTION><OPTION VALUE="2015" DISABLED>2015</OPTION><OPTION VALUE="2014" DISABLED>2014</OPTION><OPTION VALUE="2013" DISABLED>2013</OPTION><OPTION VALUE="2012" DISABLED>2012</OPTION><OPTION VALUE="2011" DISABLED>2011</OPTION><OPTION VALUE="2010" DISABLED>2010</OPTION><OPTION VALUE="2009" DISABLED>2009</OPTION></SELECT></LABEL>
+	<P><LABEL>als Vorlage zu übernehmendes Basis-Jahr: <SELECT NAME="basedata"></SELECT></LABEL>
 </DIV>
 <P><LABEL><INPUT TYPE="radio" NAME="strategy" VALUE="sorted"> <STRONG>sortiert</STRONG></LABEL>
 <DIV CLASS="strategy-options">
-	<P><LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="id" CHECKED> nach ungefährem Eintrittsdatum</LABEL>
-	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname"> nach Name</LABEL>
+	<P><LABEL CLASS="disabled"><INPUT TYPE="radio" NAME="sortkey" VALUE="id" DISABLED> nach ungefährem Eintrittsdatum</LABEL>
+	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="firstname" CHECKED> nach Name</LABEL>
 	<LABEL><INPUT TYPE="radio" NAME="sortkey" VALUE="lastname"> nach Nachname</LABEL>
 	<P><LABEL><INPUT TYPE="checkbox" NAME="descending" VALUE="yes"> absteigend</LABEL>
 </DIV>
@@ -157,7 +156,7 @@
 <DIV ID="tabs-7">
 
 <H2 style="display:none">Druck</H2>
-<P>Vorstandsmitglieder können hier die bearbeitete Liste im LibreOffice-Format zur Veröffentlichung herunterladen.
+<P>Die bearbeitete Liste kann zur Veröffentlichung hier im LibreOffice-Format geladen werden, wenn Server-Verbindung besteht.
 <P><INPUT TYPE=button ID=printbutton VALUE="ODF laden" onclick="SKGB.print()" DISABLED>
 <P STYLE="margin-top:1.5em">Die freie <STRONG>Schriftart <A HREF="http://savannah.gnu.org/projects/freefont/">FreeSerif</A></STRONG> wird <STRONG>benötigt,</STRONG> um das einheitliche Erscheinungsbild in der Vereinskommunikation zu fördern. Alle vier Schnitte von FreeSerif sollten installiert werden.
 <P>Direktlink zum Download: <A HREF="https://servo.skgb.de/font/freeserif-20120503-win.zip">freeserif-20120503-win.zip</A>
@@ -171,79 +170,6 @@
 <P STYLE="padding-top:1ex">Copyright © 2010–2019 Arne Johannessen
 <BR>Diese Anwendung ist freie Software, <A HREF="https://github.com/skgb/stegdienst">quelloffen bei GitHub</A>.
 <P STYLE="font-size:1.5em;margin-bottom:5em">
-
-<TEXTAREA COLS="120" ROWS="20" ID="initdata" READONLY STYLE="display: none;">
-{
-members: [
-{ id: 1, name: 'Adam Alfa', remote: false, board: false, exempt: true },
-{ id: 2, name: 'Britta Bravo', remote: true, board: false },
-{ id: 3, name: 'Christa Charlie', remote: true, board: false },
-{ id: 4, name: 'Dieter Delta', remote: true, board: false },
-{ id: 5, name: 'Emil Echo', remote: false, board: false },
-{ id: 6, name: 'Frida Foxtrot', remote: true, board: true },
-{ id: 7, name: 'Gerhart Golf', remote: true, board: false },
-{ id: 8, name: 'Helmut Hotel', remote: false, board: false },
-{ id: 9, name: 'Ingmar India', remote: false, board: false },
-{ id: 10, name: 'Julie Juliett', remote: true, board: false },
-{ id: 11, name: 'Karoline Kilo', remote: false, board: true },
-{ id: 12, name: 'Ludwig Lima', remote: false, board: true },
-{ id: 13, name: 'Martina Mike', remote: true, board: false },
-{ id: 14, name: 'Nora November', remote: false, board: false },
-{ id: 15, name: 'Oskar Oscar', remote: false, board: false },
-{ id: 16, name: 'Pippa Papa', remote: true, board: false },
-{ id: 17, name: 'Qādir Quebec', remote: false, board: false },
-{ id: 18, name: 'Rebekka Romeo', remote: true, board: false },
-{ id: 19, name: 'Samira Sierra', remote: false, board: true },
-{ id: 20, name: 'Timmy Tango', remote: true, board: false },
-{ id: 21, name: 'Ulrike Uniform', remote: true, board: false },
-{ id: 22, name: 'Veronika Victor', remote: false, board: false },
-{ id: 23, name: 'Wladimir Whiskey', remote: true, board: true },
-{ id: 24, name: 'Xander X. Ray', remote: true, board: false },
-{ id: 25, name: 'Yasmin Yankee', remote: false, board: false },
-{ id: 26, name: 'Zoë Zulu', remote: true, board: false },
-]
-}
-</TEXTAREA>
-
-<TEXTAREA COLS="1" ROWS="1" ID="importdatatest" READONLY STYLE="display: none;">
-Frida Foxtrot	Christa Charlie
-Helmut Hotel	Karoline Kilo
-Martina Mike	Julie Juliett
-Oskar Oscar	Nora November
-Pippa Papa	Adam Alfa
-Ingmar India	Gerhart Golf
-Britta Bravo	Ludwig Lima
-Emil Echo	Dieter Delta
-Christa Charlie	Pippa Papa
-Ludwig Lima	Oskar Oscar
-Nora November	Dieter Delta
-Gerhart Golf	Emil Echo
-Karoline Kilo	Helmut Hotel
-Christa Charlie	Britta Bravo
-Pippa Papa	Martina Mike
-Oskar Oscar	Julie Juliett
-Ingmar India	Adam Alfa
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2018" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2017" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2016" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2015" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2014" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2013" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2012" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2011" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2010" READONLY STYLE="display: none;">
-</TEXTAREA>
-<TEXTAREA COLS="1" ROWS="1" ID="importdata2009" READONLY STYLE="display: none;">
-</TEXTAREA>
 
 
 
