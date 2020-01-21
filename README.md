@@ -78,7 +78,7 @@ Installation
 Copyright
 ---------
 
-(c) 2010–2019 [Arne Johannessen](https://arne.johannessen.de/)
+(c) 2010–2020 [Arne Johannessen](https://arne.johannessen.de/)
 
 Dies ist freie Software, weiterverwendbar unter den Bedingungen der
 [ISC-Lizenz](https://github.com/johannessen/stegdienst/blob/master/LICENSE.txt).
